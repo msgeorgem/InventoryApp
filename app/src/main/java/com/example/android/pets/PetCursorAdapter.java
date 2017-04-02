@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import static com.example.android.pets.R.id.breed;
+
 /**
  * {@link PetCursorAdapter} is an adapter for a list or grid view
  * that uses a {@link Cursor} of pet data as its data source. This adapter knows
@@ -53,14 +55,14 @@ public class PetCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         // Find fields to populate in inflated template
-        TextView mName = (TextView) view.findViewById(R.id.name);
-        TextView mBreed = (TextView) view.findViewById(R.id.breed);
+        TextView nameTextView = (TextView) view.findViewById(R.id.name);
+        TextView breedTextView = (TextView) view.findViewById(breed);
         //Extract properties from cursor
-        String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
-        String breed = cursor.getString(cursor.getColumnIndexOrThrow("breed"));
+        String nameColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+        String breedColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow("breed"));
         //int weight = cursor.getInt(cursor.getColumnIndexOrThrow("weight"));
         //Populate fields with extracted properties
-        mName.setText(name);
-        mBreed.setText(breed);
+        nameTextView.setText(nameColumnIndex);
+        breedTextView.setText(breedColumnIndex);
     }
 }

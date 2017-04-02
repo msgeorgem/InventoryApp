@@ -52,6 +52,13 @@ public class CatalogActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Find the ListView which will be populated with the pet data
+        ListView petListView = (ListView) findViewById(R.id.list_view);
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        View emptyView = findViewById(R.id.empty_view);
+        petListView.setEmptyView(emptyView);
+
         // To access our database, we instantiate our subclass of SQLiteOpenHelper
         // and pass the context, which is the current activity.
         mDbHelper = new PetDbHelper(this);
@@ -89,9 +96,9 @@ public class CatalogActivity extends AppCompatActivity {
 
         ListView listViewItems = (ListView) findViewById(R.id.list_view);
         //Setup cursoradapter using cursor
-        PetCursorAdapter petAdapter = new PetCursorAdapter(this, cursor);
+        PetCursorAdapter adapter = new PetCursorAdapter(this, cursor);
         //Attach cursor dapter to the listview
-        listViewItems.setAdapter(petAdapter);
+        listViewItems.setAdapter(adapter);
 
 
     }
