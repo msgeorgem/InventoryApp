@@ -18,25 +18,30 @@ package com.example.android.pets;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+
+
 import com.example.android.pets.data.PetContract;
-import com.example.android.pets.data.PetDbHelper;
 
 /**
  * Displays list of pets that were entered and stored in the app.
  */
-public class CatalogActivity extends AppCompatActivity {
+public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    private PetDbHelper mDbHelper;
+    private static final int PET_LOADER = 0;
+    PetCursorAdapter mCursorAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,57 +64,15 @@ public class CatalogActivity extends AppCompatActivity {
         View emptyView = findViewById(R.id.empty_view);
         petListView.setEmptyView(emptyView);
 
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        mDbHelper = new PetDbHelper(this);
-
+        mCursorAdapter = new PetCursorAdapter(this, null);
+        petListView.setAdapter(mCursorAdapter);
+        //kick off the loader
+        getLoaderManager().initLoader(PET_LOADER, null,(android.app.LoaderManager.LoaderCallbacks<Cursor>)this);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        displayDatabaseInfo();
-    }
-
-
-    private void displayDatabaseInfo() {
-
-        String[] projection = {
-                PetContract.PetEntry._ID,
-                PetContract.PetEntry.COLUMN_PET_NAME,
-                PetContract.PetEntry.COLUMN_PET_BREED,
-                PetContract.PetEntry.COLUMN_PET_GENDER,
-                PetContract.PetEntry.COLUMN_PET_WEIGHT
-        };
-
-        // Perform a query using ContentResolver
-        Cursor cursor = getContentResolver().query(
-                PetContract.PetEntry.CONTENT_URI,  // The content uri
-                projection,            // The columns to return
-                                        // The columns for the WHERE clause
-                null,                  // The values for the WHERE clause
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                null);                 // The sort order);
-
-
-
-        ListView listViewItems = (ListView) findViewById(R.id.list_view);
-        //Setup cursoradapter using cursor
-        PetCursorAdapter adapter = new PetCursorAdapter(this, cursor);
-        //Attach cursor dapter to the listview
-        listViewItems.setAdapter(adapter);
-
-
-    }
     private void insertPet(){
 
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        mDbHelper = new PetDbHelper(this);
-        // Gets the data repository in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        // Create a new map of values, where column names are the keys
+        // Create a ContentValues object, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(PetContract.PetEntry.COLUMN_PET_NAME, "Toto");
         values.put(PetContract.PetEntry.COLUMN_PET_BREED, "Terrier");
@@ -117,9 +80,7 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetContract.PetEntry.COLUMN_PET_WEIGHT, 7);
 
         // Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(PetContract.PetEntry.TABLE_NAME, null, values);
-
-        Log.v ("CatalogActivity","New row ID" + newRowId);
+        Uri newUri = getContentResolver().insert(PetContract.PetEntry.CONTENT_URI, values);
     }
 
     @Override
@@ -138,7 +99,6 @@ public class CatalogActivity extends AppCompatActivity {
             case R.id.action_insert_dummy_data:
                 // Do nothing for now
                 insertPet();
-                displayDatabaseInfo();
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
@@ -146,5 +106,39 @@ public class CatalogActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                PetContract.PetEntry._ID,
+                PetContract.PetEntry.COLUMN_PET_NAME,
+                PetContract.PetEntry.COLUMN_PET_BREED,
+        //      PetContract.PetEntry.COLUMN_PET_GENDER,
+        //      PetContract.PetEntry.COLUMN_PET_WEIGHT
+        };
+
+        // Perform a query using CursorLoader
+        return new CursorLoader(this,    // Parent activity context
+                PetContract.PetEntry.CONTENT_URI, // Provider content URI to query
+                projection,            // The columns to include in the resulting Cursor
+                null,                  // The values for the WHERE clause
+                null,                  // No selection arguments
+                null);                 // Default sort order
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        // Update {@link PetCursor Adapter with this new cursor containing updated pet data
+        mCursorAdapter.swapCursor(data);
+
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+// Callbac called when the data needs to be deleted
+        mCursorAdapter.swapCursor(null);
+
     }
 }
