@@ -26,6 +26,8 @@ public class PetProvider extends ContentProvider {
     /** URI matcher code for the content URI for a single pet in the pets table */
     private static final int PET_ID = 101;
 
+
+
        /**
      * UriMatcher object to match a content URI to a corresponding code.
      * The input passed into the constructor represents the code to return for the root URI.
@@ -118,6 +120,29 @@ public class PetProvider extends ContentProvider {
         }
     }
     private Uri insertPet(Uri uri, ContentValues values) {
+
+        // Check that the name is not null
+        String name = values.getAsString(PetContract.PetEntry.COLUMN_PET_NAME);
+        if (name == null) {
+            throw new IllegalArgumentException("Pet requires a name");
+        }
+        // Check that the breed is not null
+        String breed = values.getAsString(PetContract.PetEntry.COLUMN_PET_BREED);
+        if (breed == null) {
+            throw new IllegalArgumentException("Pet requires a breed");
+        }
+        // Check that the gender is not null
+        Integer gender = values.getAsInteger(PetContract.PetEntry.COLUMN_PET_GENDER);
+        if (gender == null || !PetContract.PetEntry.isValidGender(gender)) {
+            throw new IllegalArgumentException("Pet requires valid gender");
+        }
+
+        // If the weight is provided, check that it's greater than or equal to 0 kg
+        Integer weight = values.getAsInteger(PetContract.PetEntry.COLUMN_PET_WEIGHT);
+        if (weight != null && weight < 0) {
+            throw new IllegalArgumentException("Pet requires valid weight");
+        }
+
 
         // / Gets the database in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
