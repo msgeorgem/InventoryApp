@@ -26,6 +26,12 @@
     <!-- Label for editor menu option to save pet and leave editor [CHAR LIMIT=20] -->
     <string name="action_save">Save</string>
 
+    <!-- Message for toast [CHAR LIMIT=20] -->
+    <string name="error">Error with saving pet</string>
+
+    <!-- Message for toast [CHAR LIMIT=20] -->
+    <string name="pet_saved">Error with saving pet</string>
+
     <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
 
@@ -58,4 +64,7 @@
 
     <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
     <string name="gender_female">Female</string>
+
+
+
 </resources>

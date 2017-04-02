@@ -7,6 +7,9 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
+
+import static android.R.attr.id;
 
 /**
  * Created by Marcin on 2017-04-01.
@@ -23,7 +26,7 @@ public class PetProvider extends ContentProvider {
     /** URI matcher code for the content URI for a single pet in the pets table */
     private static final int PET_ID = 101;
 
-    /**
+       /**
      * UriMatcher object to match a content URI to a corresponding code.
      * The input passed into the constructor represents the code to return for the root URI.
      * It's common to use NO_MATCH as the input for this case.
@@ -61,7 +64,7 @@ public class PetProvider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
 
         // This cursor will hold the result of the query
-        Cursor cursor = null;
+        Cursor cursor;
 
         // Figure out if the URI matcher can match the URI to a specific code
         int match = sUriMatcher.match(uri);
@@ -70,7 +73,13 @@ public class PetProvider extends ContentProvider {
                 // For the PETS code, query the pets table directly with the given
                 // projection, selection, selection arguments, and sort order. The cursor
                 // could contain multiple rows of the pets table.
-                // TODO: Perform database query on pets table
+                cursor = database.query(PetContract.PetEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
                 break;
             case PET_ID:
                 // For the PET_ID code, extract out the ID from the URI.
@@ -100,9 +109,32 @@ public class PetProvider extends ContentProvider {
      */
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                return insertPet(uri, contentValues);
+            default:
+                throw new IllegalArgumentException("Insertion is not supported for " + uri);
+        }
     }
+    private Uri insertPet(Uri uri, ContentValues values) {
 
+        // / Gets the database in write mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Insert a new row for pet in the database, returning the ID of that new row.
+        long newRowId = db.insert(PetContract.PetEntry.TABLE_NAME, null, values);
+
+        // Show a toast message depending on whether or not the insertion was successful
+        if (newRowId == -1) {
+            // If the row ID is -1, then there was an error with insertion.
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        }
+        // Once we know the ID of the new row in the table,
+        // return the new URI with the ID appended to the end of it
+        return ContentUris.withAppendedId(uri, id);
+    }
     /**
      * Updates the data at the given selection and selection arguments, with the new ContentValues.
      */
