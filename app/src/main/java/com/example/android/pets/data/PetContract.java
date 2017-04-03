@@ -63,10 +63,7 @@ public final class PetContract {
 
 
         public static boolean isValidGender(int gender) {
-            if (gender == GENDER_UNKNOWN || gender == GENDER_MALE || gender == GENDER_FEMALE) {
-                return true;
-            }
-            return false;
+            return gender == GENDER_UNKNOWN || gender == GENDER_MALE || gender == GENDER_FEMALE;
         }
         /**
          * The MIME type of the {@link #CONTENT_URI} for a list of pets.

@@ -15,6 +15,7 @@
  */
 package com.example.android.pets;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,9 +29,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-
-
 
 import com.example.android.pets.data.PetContract;
 
@@ -66,8 +66,26 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         mCursorAdapter = new PetCursorAdapter(this, null);
         petListView.setAdapter(mCursorAdapter);
+
+        //Setup item click listener
+        petListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+                //From the content URI that represents the specific pet that was clicked on,
+                //by appending the "id" (passed as input to this method)onto the
+                //{@link PetEntry#CONTENT_URI}.
+                Uri currentPetUri = ContentUris.withAppendedId(PetContract.PetEntry.CONTENT_URI, id);
+
+                //Set the URI on the data field of the intent
+                intent.setData(currentPetUri);
+                //Launch the {@link EditorActivity} to display the data fot the current pet.
+                startActivity(intent);
+            }
+        });
+
         //kick off the loader
-        getLoaderManager().initLoader(PET_LOADER, null,(android.app.LoaderManager.LoaderCallbacks<Cursor>)this);
+        getSupportLoaderManager().initLoader(PET_LOADER, null,this);
     }
 
     private void insertPet(){
@@ -97,7 +115,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         switch (item.getItemId()) {
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
-                // Do nothing for now
                 insertPet();
                 return true;
             // Respond to a click on the "Delete all entries" menu option
@@ -137,7 +154,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-// Callbac called when the data needs to be deleted
+        // Callback called when the data needs to be deleted
         mCursorAdapter.swapCursor(null);
 
     }
