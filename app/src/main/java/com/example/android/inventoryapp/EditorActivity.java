@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.pets;
+package com.example.android.inventoryapp;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -38,7 +38,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.android.pets.data.PetContract.PetEntry;
+import com.example.android.inventoryapp.data.InventoryContract;
+import com.example.android.inventoryapp.data.InventoryContract.ItemEntry;
 
 /**
  * Allows user to create a new pet or edit an existing one.
@@ -67,7 +68,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
      * Gender of the pet. The possible values are:
      * 0 for unknown gender, 1 for male, 2 for female.
      */
-    private int mGender = PetEntry.GENDER_UNKNOWN;
+    private int mGender = ItemEntry.TYPE_UNKNOWN;
 
     private boolean mPetHasChanged = false;
 
@@ -93,13 +94,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // creating a new pet.
         if (mCurrentPetUri == null){
             // This is a new pet, so change the app bar to say "Add a Pet"
-            setTitle(getString(R.string.editor_activity_title_new_pet));
+            setTitle(getString(R.string.editor_activity_title_new_item));
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
             // (It doesn't make sense to delete a pet that hasn't been created yet.)
             invalidateOptionsMenu();
         }else {
             // Otherwise this is an existing pet, so change app bar to say "Edit Pet"
-            setTitle(getString(R.string.editor_activity_title_edit_pet));
+            setTitle(getString(R.string.editor_activity_title_edit_item));
 
             // Initialize a loader to read the pet data from the database
             // and display the current values in the editor
@@ -172,7 +173,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Create adapter for spinner. The list options are from the String array it will use
         // the spinner will use the default layout
         ArrayAdapter genderSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_gender_options, android.R.layout.simple_spinner_item);
+                R.array.array_type_options, android.R.layout.simple_spinner_item);
 
         // Specify dropdown layout style - simple list view with 1 item per line
         genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
@@ -186,12 +187,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selection = (String) parent.getItemAtPosition(position);
                 if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.gender_male))) {
-                        mGender = PetEntry.GENDER_MALE; // Male
-                    } else if (selection.equals(getString(R.string.gender_female))) {
-                        mGender = PetEntry.GENDER_FEMALE; // Female
+                    if (selection.equals(getString(R.string.type_aaa))) {
+                        mGender = ItemEntry.TYPE_AAA; // Male
+                    } else if (selection.equals(getString(R.string.type_bbb))) {
+                        mGender = ItemEntry.TYPE_BBB; // Female
                     } else {
-                        mGender = PetEntry.GENDER_UNKNOWN; // Unknown
+                        mGender = ItemEntry.TYPE_UNKNOWN; // Unknown
                     }
                 }
             }
@@ -199,7 +200,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                mGender = PetEntry.GENDER_UNKNOWN; // Unknown
+                mGender = ItemEntry.TYPE_UNKNOWN; // Unknown
             }
         });
     }
@@ -217,7 +218,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // and check if all the fields in the editor are blank
         if (mCurrentPetUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(breedString) &&
-                TextUtils.isEmpty(weightString) && mGender == PetEntry.GENDER_UNKNOWN) {
+                TextUtils.isEmpty(weightString) && mGender == InventoryContract.ItemEntry.TYPE_UNKNOWN) {
             // Since no fields were modified, we can return early without creating a new pet.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -225,9 +226,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Create a ContentValues object where column names are the keys,
         // and pet attributes from the editor are the values.
         ContentValues values = new ContentValues();
-        values.put(PetEntry.COLUMN_PET_NAME, nameString);
-        values.put(PetEntry.COLUMN_PET_BREED, breedString);
-        values.put(PetEntry.COLUMN_PET_GENDER, mGender);
+        values.put(ItemEntry.COLUMN_ITEM_NAME, nameString);
+        values.put(ItemEntry.COLUMN_ITEM_PRODUCER, breedString);
+        values.put(ItemEntry.COLUMN_ITEM_TYPE, mGender);
 
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
@@ -235,21 +236,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (!TextUtils.isEmpty(weightString)) {
             weight = Integer.parseInt(weightString);
         }
-        values.put(PetEntry.COLUMN_PET_WEIGHT, weight);
+        values.put(ItemEntry.COLUMN_ITEM_WEIGHT, weight);
 
         // Determine if this is a new or existing pet by checking if mCurrentPetUri is null or not
         if (mCurrentPetUri == null){
             // This is a NEW pet, so insert a new pet into the provider,
             // returning the content URI for the new pet.
-            Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
+            Uri newUri = getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
 
             // Show a toast message depending on whether or not the insertion was successful.
             if (newUri == null) {
                 // If the new content URI is null, then there was an error with insertion.
-                Toast.makeText(this, getString(R.string.editor_insert_pet_failed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_insert_item_failed), Toast.LENGTH_SHORT).show();
             }else {
                 // Otherwise, the insertion was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_insert_pet_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_insert_item_success), Toast.LENGTH_SHORT).show();
             }
         }else {
             // Otherwise this is an EXISTING pet, so update the pet with content URI: mCurrentPetUri
@@ -261,10 +262,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Show a toast message depending on whether or not the update was successful.
             if (rowsAffected == 0) {
                 // If no rows were affected, then there was an error with the update.
-                Toast.makeText(this, getString(R.string.editor_update_pet_failed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_update_item_failed), Toast.LENGTH_SHORT).show();
             }else {
                 // Otherwise, the update was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_update_pet_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_update_item_success), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -310,10 +311,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Show a toast message depending on whether or not the delete was successful.
             if (rowsDeleted == 0){
                 // If no rows were deleted, then there was an error with the delete.
-                Toast.makeText(this, getString(R.string.editor_delete_pet_failed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_delete_item_failed), Toast.LENGTH_SHORT).show();
             }else {
                 // Otherwise, the delete was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_delete_pet_successful), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.editor_delete_item_successful), Toast.LENGTH_SHORT).show();
             }
         }
         // Close the activity
@@ -392,11 +393,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Since the editor shows all pet attributes, define a projection that contains
         // all columns from the pet table
         String[] projection = {
-                PetEntry._ID,
-                PetEntry.COLUMN_PET_NAME,
-                PetEntry.COLUMN_PET_BREED,
-                PetEntry.COLUMN_PET_GENDER,
-                PetEntry.COLUMN_PET_WEIGHT};
+                ItemEntry._ID,
+                InventoryContract.ItemEntry.COLUMN_ITEM_NAME,
+                ItemEntry.COLUMN_ITEM_PRODUCER,
+                ItemEntry.COLUMN_ITEM_TYPE,
+                ItemEntry.COLUMN_ITEM_WEIGHT};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
@@ -418,10 +419,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
             // Find the columns of pet attributes that we're interested in
-            int nameColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME);
-            int breedColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_BREED);
-            int genderColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_GENDER);
-            int weightColumnIndex = cursor.getColumnIndex(PetEntry.COLUMN_PET_WEIGHT);
+            int nameColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_NAME);
+            int breedColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER);
+            int genderColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_TYPE);
+            int weightColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_WEIGHT);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
@@ -438,10 +439,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // into one of the dropdown options (0 is Unknown, 1 is Male, 2 is Female).
             // Then call setSelection() so that option is displayed on screen as the current selection.
             switch (gender) {
-                case PetEntry.GENDER_MALE:
+                case ItemEntry.TYPE_AAA:
                     mGenderSpinner.setSelection(1);
                     break;
-                case PetEntry.GENDER_FEMALE:
+                case InventoryContract.ItemEntry.TYPE_BBB:
                     mGenderSpinner.setSelection(2);
                     break;
                 default:

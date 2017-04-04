@@ -1,4 +1,4 @@
-package com.example.android.pets.data;
+package com.example.android.inventoryapp.data;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -15,11 +15,11 @@ import static android.R.attr.id;
  * Created by Marcin on 2017-04-01.
  */
 
-public class PetProvider extends ContentProvider {
+public class InventoryProvider extends ContentProvider {
     /** Database Helper object */
-    private PetDbHelper mDbHelper;
+    private InventoryDbHelper mDbHelper;
     /** Tag for the log messages */
-    public static final String LOG_TAG = PetProvider.class.getSimpleName();
+    public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
     /** URI matcher code for the content URI for the pets table */
     private static final int PETS = 100;
 
@@ -40,8 +40,8 @@ public class PetProvider extends ContentProvider {
         // The calls to addURI() go here, for all of the content URI patterns that the provider
         // should recognize. All paths added to the UriMatcher have a corresponding code to return
         // when a match is found.
-        sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS, PETS);
-        sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS +"/#", PET_ID);
+        sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_ITEMS, PETS);
+        sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_ITEMS +"/#", PET_ID);
     }
     /**
      * Initialize the provider and the database helper object.
@@ -49,8 +49,8 @@ public class PetProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
 
-        // Create and initialize a PetDbHelper object to gain access to the pets database.
-        mDbHelper = new PetDbHelper(getContext());
+        // Create and initialize a InventoryDbHelper object to gain access to the pets database.
+        mDbHelper = new InventoryDbHelper(getContext());
         // Make sure the variable is a global variable, so it can be referenced from other
         // ContentProvider methods.
         return true;
@@ -75,7 +75,7 @@ public class PetProvider extends ContentProvider {
                 // For the PETS code, query the pets table directly with the given
                 // projection, selection, selection arguments, and sort order. The cursor
                 // could contain multiple rows of the pets table.
-                cursor = database.query(PetContract.PetEntry.TABLE_NAME,
+                cursor = database.query(InventoryContract.ItemEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -92,12 +92,12 @@ public class PetProvider extends ContentProvider {
                 // For every "?" in the selection, we need to have an element in the selection
                 // arguments that will fill in the "?". Since we have 1 question mark in the
                 // selection, we have 1 String in the selection arguments' String array.
-                selection = PetContract.PetEntry._ID + "=?";
+                selection = InventoryContract.ItemEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
 
                 // This will perform a query on the pets table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
-                cursor = database.query(PetContract.PetEntry.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(InventoryContract.ItemEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             default:
@@ -127,22 +127,22 @@ public class PetProvider extends ContentProvider {
     private Uri insertPet(Uri uri, ContentValues values) {
 
         // Check that the name is not null
-        String name = values.getAsString(PetContract.PetEntry.COLUMN_PET_NAME);
+        String name = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_NAME);
         if (name == null) {
             throw new IllegalArgumentException("Pet requires a name");
         }
         // Check that the breed is not null
-        String breed = values.getAsString(PetContract.PetEntry.COLUMN_PET_BREED);
+        String breed = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER);
         if (breed == null) {
             throw new IllegalArgumentException("Pet requires a breed");
         }
         // Check that the gender is not null
-        Integer gender = values.getAsInteger(PetContract.PetEntry.COLUMN_PET_GENDER);
-        if (gender == null || !PetContract.PetEntry.isValidGender(gender)) {
+        Integer gender = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_TYPE);
+        if (gender == null || !InventoryContract.ItemEntry.isValidType(gender)) {
             throw new IllegalArgumentException("Pet requires valid gender");
         }
         // If the weight is provided, check that it's greater than or equal to 0 kg
-        Integer weight = values.getAsInteger(PetContract.PetEntry.COLUMN_PET_WEIGHT);
+        Integer weight = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_WEIGHT);
         if (weight != null && weight < 0) {
             throw new IllegalArgumentException("Pet requires valid weight");
         }
@@ -152,7 +152,7 @@ public class PetProvider extends ContentProvider {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         // Insert a new row for pet in the database, returning the ID of that new row.
-        long newRowId = db.insert(PetContract.PetEntry.TABLE_NAME, null, values);
+        long newRowId = db.insert(InventoryContract.ItemEntry.TABLE_NAME, null, values);
 
         // Show a toast message depending on whether or not the insertion was successful
         if (newRowId == -1) {
@@ -181,7 +181,7 @@ public class PetProvider extends ContentProvider {
                 // For the PET_ID code, extract out the ID from the URI,
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
-                selection = PetContract.PetEntry._ID + "=?";
+                selection = InventoryContract.ItemEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
                 return updatePet(uri, contentValues, selection, selectionArgs);
             default:
@@ -195,29 +195,29 @@ public class PetProvider extends ContentProvider {
      * Return the number of rows that were successfully updated.
      */
     private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        // If the {@link PetEntry#COLUMN_PET_NAME} key is present,
+        // If the {@link ItemEntry#COLUMN_PET_NAME} key is present,
         // check that the name value is not null.
-        if (values.containsKey(PetContract.PetEntry.COLUMN_PET_NAME)) {
-            String name = values.getAsString(PetContract.PetEntry.COLUMN_PET_NAME);
+        if (values.containsKey(InventoryContract.ItemEntry.COLUMN_ITEM_NAME)) {
+            String name = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_NAME);
             if (name == null) {
                 throw new IllegalArgumentException("Pet requires a name");
             }
         }
 
-        // If the {@link PetEntry#COLUMN_PET_GENDER} key is present,
+        // If the {@link ItemEntry#COLUMN_ITEM_TYPE} key is present,
         // check that the gender value is valid.
-        if (values.containsKey(PetContract.PetEntry.COLUMN_PET_GENDER)) {
-            Integer gender = values.getAsInteger(PetContract.PetEntry.COLUMN_PET_GENDER);
-            if (gender == null || !PetContract.PetEntry.isValidGender(gender)) {
+        if (values.containsKey(InventoryContract.ItemEntry.COLUMN_ITEM_TYPE)) {
+            Integer gender = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_TYPE);
+            if (gender == null || !InventoryContract.ItemEntry.isValidType(gender)) {
                 throw new IllegalArgumentException("Pet requires valid gender");
             }
         }
 
-        // If the {@link PetEntry#COLUMN_PET_WEIGHT} key is present,
+        // If the {@link ItemEntry#COLUMN_ITEM_WEIGHT} key is present,
         // check that the weight value is valid.
-        if (values.containsKey(PetContract.PetEntry.COLUMN_PET_WEIGHT)) {
+        if (values.containsKey(InventoryContract.ItemEntry.COLUMN_ITEM_WEIGHT)) {
             // Check that the weight is greater than or equal to 0 kg
-            Integer weight = values.getAsInteger(PetContract.PetEntry.COLUMN_PET_WEIGHT);
+            Integer weight = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_WEIGHT);
             if (weight != null && weight < 0) {
                 throw new IllegalArgumentException("Pet requires valid weight");
             }
@@ -234,7 +234,7 @@ public class PetProvider extends ContentProvider {
 
 
         // Perform the update on the database and get the number of rows affected
-        int rowsUpdated = db.update(PetContract.PetEntry.TABLE_NAME, values, selection, selectionArgs);
+        int rowsUpdated = db.update(InventoryContract.ItemEntry.TABLE_NAME, values, selection, selectionArgs);
         // If 1 or more rows were updated, then notify all listeners that the data at the
         // given URI has changed
         if (rowsUpdated != 0) {
@@ -262,7 +262,7 @@ public class PetProvider extends ContentProvider {
         switch (match) {
             case PETS:
                 // Delete all rows that match the selection and selection args
-                rowsDeleted = database.delete(PetContract.PetEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(InventoryContract.ItemEntry.TABLE_NAME, selection, selectionArgs);
                 if (rowsDeleted != 0) {
                     getContext().getContentResolver().notifyChange(uri, null);
                     // Return the number of rows deleted
@@ -270,10 +270,10 @@ public class PetProvider extends ContentProvider {
                 }
             case PET_ID:
                 // Delete a single row given by the ID in the URI
-                selection = PetContract.PetEntry._ID + "=?";
+                selection = InventoryContract.ItemEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 // Delete a single row given by the ID in the URI
-                rowsDeleted = database.delete(PetContract.PetEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(InventoryContract.ItemEntry.TABLE_NAME, selection, selectionArgs);
                 if (rowsDeleted != 0) {
                     getContext().getContentResolver().notifyChange(uri, null);
                     // Return the number of rows deleted
@@ -297,9 +297,9 @@ public class PetProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case PETS:
-                return PetContract.PetEntry.CONTENT_LIST_TYPE;
+                return InventoryContract.ItemEntry.CONTENT_LIST_TYPE;
             case PET_ID:
-                return PetContract.PetEntry.CONTENT_ITEM_TYPE;
+                return InventoryContract.ItemEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }

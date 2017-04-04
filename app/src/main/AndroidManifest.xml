@@ -10,7 +10,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<manifest package="com.example.android.pets"
+<manifest package="com.example.android.inventoryapp"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".CatalogActivity"
+            android:name="com.example.android.inventoryapp.CatalogActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -28,17 +28,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EditorActivity"
+            android:name="com.example.android.inventoryapp.EditorActivity"
             android:theme="@style/EditorTheme"
-            android:parentActivityName=".CatalogActivity" >
+            android:parentActivityName="com.example.android.inventoryapp.CatalogActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CatalogActivity" />
+                android:value="com.example.android.inventoryapp.CatalogActivity" />
         </activity>
         <provider
-            android:name=".data.PetProvider"
-            android:authorities="com.example.android.pets"
+            android:name="com.example.android.inventoryapp.data.InventoryProvider"
+            android:authorities="com.example.android.inventoryapp"
             android:exported="false" />
     </application>
 

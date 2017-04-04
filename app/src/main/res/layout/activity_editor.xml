@@ -42,14 +42,14 @@
             <!-- Name field -->
             <EditText
                 android:id="@+id/edit_pet_name"
-                android:hint="@string/hint_pet_name"
+                android:hint="@string/hint_item_name"
                 android:inputType="textCapWords"
                 style="@style/EditorFieldStyle" />
 
             <!-- Breed field -->
             <EditText
                 android:id="@+id/edit_pet_breed"
-                android:hint="@string/hint_pet_breed"
+                android:hint="@string/hint_item_type"
                 android:inputType="textCapWords"
                 style="@style/EditorFieldStyle" />
         </LinearLayout>
@@ -64,7 +64,7 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_gender"
+            android:text="@string/category_type"
             style="@style/CategoryStyle" />
 
         <!-- Input field -->
@@ -106,14 +106,14 @@
             <!-- Weight field -->
             <EditText
                 android:id="@+id/edit_pet_weight"
-                android:hint="@string/hint_pet_weight"
+                android:hint="@string/hint_item_producer"
                 android:inputType="number"
                 style="@style/EditorFieldStyle" />
 
             <!-- Units for weight (kg) -->
             <TextView
                 android:id="@+id/label_weight_units"
-                android:text="@string/unit_pet_weight"
+                android:text="@string/unit_item_weight"
                 style="@style/EditorUnitsStyle"/>
         </RelativeLayout>
     </LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.android.pets;
+package com.example.android.inventoryapp;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,32 +9,34 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.example.android.pets.data.PetContract;
+
+import com.example.android.inventoryapp.data.InventoryContract;
 
 /**
- * {@link PetCursorAdapter} is an adapter for a list or grid view
+ * {@link InventoryCursorAdapter} is an adapter for a list or grid view
  * that uses a {@link Cursor} of pet data as its data source. This adapter knows
  * how to create list items for each row of pet data in the {@link Cursor}.
  */
-public class PetCursorAdapter extends CursorAdapter {
 
-    /**
-     * Constructs a new {@link PetCursorAdapter}.
-     *
-     * @param context The context
-     * @param c       The cursor from which to get the data.
-     */
-    public PetCursorAdapter(Context context, Cursor c) {
-        super(context, c, 0 /* flags */);
-    }
+ public class InventoryCursorAdapter extends CursorAdapter {
 
-    /**
-     * Makes a new blank list item view. No data is set (or bound) to the views yet.
-     *
-     * @param context app context
-     * @param cursor  The cursor from which to get the data. The cursor is already
-     *                moved to the correct position.
-     * @param parent  The parent to which the new view is attached to
+     /**
+       * Constructs a new {@link InventoryCursorAdapter}.
+       *
+       * @param context The context
+       * @param c       The cursor from which to get the data.
+       */
+     public InventoryCursorAdapter(Context context, Cursor c) {
+           super(context, c, 0 /* flags */);
+           }
+
+     /**
+       * Makes a new blank list item view. No data is set (or bound) to the views yet.
+       *
+       * @param context app context
+       * @param cursor  The cursor from which to get the data. The cursor is already
+       *                moved to the correct position.
+       * @param parent  The parent to which the new view is attached to
      * @return the newly created list item view.
      */
     @Override
@@ -60,8 +62,8 @@ public class PetCursorAdapter extends CursorAdapter {
         TextView summaryTextView = (TextView) view.findViewById(R.id.breed);
 
         // Find the columns of pet attributes that we're interested in
-        int nameColumnIndex = cursor.getColumnIndex(PetContract.PetEntry.COLUMN_PET_NAME);
-        int breedColumnIndex = cursor.getColumnIndex(PetContract.PetEntry.COLUMN_PET_BREED);
+        int nameColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_NAME);
+        int breedColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER);
 
         // Read the pet attributes from the Cursor for the current pet
         String petName = cursor.getString(nameColumnIndex);
@@ -70,7 +72,7 @@ public class PetCursorAdapter extends CursorAdapter {
         // If the pet breed is empty string or null, then use some default text
         // that says "Unknown breed", so the TextView isn't blank.
         if (TextUtils.isEmpty(petBreed)) {
-            petBreed = context.getString(R.string.unknown_breed);
+            petBreed = context.getString(R.string.unknown_type);
         }
 
         // Update the TextViews with the attributes for the current pet
