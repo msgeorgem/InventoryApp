@@ -11,16 +11,15 @@
      limitations under the License.
 -->
 <!-- Layout for the editor -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/activity_margin"
-    tools:context=".EditorActivity">
+    tools:context=".EditorAcitvity">
 
-    <!-- Overview category -->
+    <!-- Item category -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,93 +27,103 @@
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_overview"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/item_name" />
 
-        <!-- Input fields -->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:orientation="vertical">
-
-            <!-- Name field -->
-            <EditText
-                android:id="@+id/edit_pet_name"
-                android:hint="@string/hint_item_name"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
-
-            <!-- Breed field -->
-            <EditText
-                android:id="@+id/edit_pet_breed"
-                android:hint="@string/hint_item_type"
-                android:inputType="textCapWords"
-                style="@style/EditorFieldStyle" />
-        </LinearLayout>
+        <!-- Name field -->
+        <EditText
+            android:id="@+id/edit_items_name"
+            style="@style/EditorFieldStyle"
+            android:hint="Name of the Product"
+            android:inputType="textCapWords" />
     </LinearLayout>
 
-    <!-- Gender category -->
+    <!-- Odescription category -->
+
     <LinearLayout
-        android:id="@+id/container_gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_type"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/edit_description" />
 
-        <!-- Input field -->
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
-
-            <!-- Gender drop-down spinner -->
-            <Spinner
-                android:id="@+id/spinner_gender"
-                android:layout_height="48dp"
-                android:layout_width="wrap_content"
-                android:paddingRight="16dp"
-                android:spinnerMode="dropdown"/>
-        </LinearLayout>
+        <!-- Name field -->
+        <EditText
+            android:id="@+id/edit_description"
+            style="@style/EditorFieldStyle"
+            android:hint="Name of the Product"
+            android:inputType="text" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/edit_producer" />
+
+        <!-- Name field -->
+        <EditText
+            android:id="@+id/edit_producer"
+            style="@style/EditorFieldStyle"
+            android:hint="Name of the Product"
+            android:inputType="textCapWords" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/edit_stock" />
+
+        <!-- Name field -->
+        <EditText
+            android:id="@+id/edit_stock"
+            style="@style/EditorFieldStyle"
+            android:hint="Name of the Product"
+            android:inputType="number" />
+    </LinearLayout>
     <!-- Measurement category -->
+
     <LinearLayout
-        android:id="@+id/container_measurement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <!-- Label -->
         <TextView
-            android:text="@string/category_measurement"
-            style="@style/CategoryStyle" />
+            style="@style/CategoryStyle"
+            android:text="@string/category_image" />
 
         <!-- Input fields -->
-        <RelativeLayout
-            android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/insert_image"
             android:layout_width="0dp"
-            android:layout_weight="2"
-            android:paddingLeft="4dp">
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Choose File" />
 
-            <!-- Weight field -->
-            <EditText
-                android:id="@+id/edit_pet_weight"
-                android:hint="@string/hint_item_producer"
-                android:inputType="number"
-                style="@style/EditorFieldStyle" />
-
-            <!-- Units for weight (kg) -->
-            <TextView
-                android:id="@+id/label_weight_units"
-                android:text="@string/unit_item_weight"
-                style="@style/EditorUnitsStyle"/>
-        </RelativeLayout>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/inserted_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"/>
+
+
 </LinearLayout>

@@ -53,23 +53,23 @@ public final class InventoryContract {
         public static final String UPLOAD_TABLE_NAME = "items_upload";
         public static final String _ID = BaseColumns._ID;
         public static final String COLUMN_ITEM_NAME = "name";
-        public static final String COLUMN_ITEM_TYPE = "type";
+        public static final String COLUMN_ITEM_DESCRIPTION = "description";
         public static final String COLUMN_ITEM_PRODUCER = "producer";
-        public static final String COLUMN_ITEM_WEIGHT = "weight";
-        public static final String COLUMN_ITEM_PICTURE = "producer";
+        public static final String COLUMN_ITEM_STOCK = "stock";
+        public static final String COLUMN_ITEM_PICTURE = "image";
 
-        /**
-         * Possible values for the COLUMN_TYPEtype.
-         */
-
-        public static final int TYPE_UNKNOWN = 0;
-        public static final int TYPE_AAA = 1;
-        public static final int TYPE_BBB = 2;
-
-
-        public static boolean isValidType(int item) {
-            return item == TYPE_UNKNOWN || item == TYPE_AAA || item == TYPE_BBB;
-        }
+//        /**
+//         * Possible values for the COLUMN_PRODUCER
+//         */
+//
+//        public static final int UNKNOWN = 0;
+//        public static final int TYPE_AAA = 1;
+//        public static final int TYPE_BBB = 2;
+//
+//
+//        public static boolean isValidType(int item) {
+//            return item == UNKNOWN || item == TYPE_AAA || item == TYPE_BBB;
+//        }
         /**
          * The MIME type of the {@link #CONTENT_URI} for a list of items.
          */

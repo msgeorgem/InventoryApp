@@ -20,6 +20,9 @@
     <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
     <string name="action_delete_all_entries">Delete All items</string>
 
+    <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
+    <string name="action_final_delete_all_entries">Final delete All items</string>
+
     <!-- Title for the activity to add a new pet [CHAR LIMIT=20] -->
     <string name="editor_activity_title_new_item">Add an Item</string>
     <!-- Title for the activity to add a new pet [CHAR LIMIT=20] -->
@@ -38,13 +41,16 @@
     <string name="action_delete">Delete</string>
 
     <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
-    <string name="category_overview">Overview</string>
+    <string name="edit_description">Description</string>
 
     <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
-    <string name="category_type">Type</string>
+    <string name="item_name">Item Name</string>
+
+    <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
+    <string name="edit_producer">Producer</string>
 
     <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
-    <string name="category_measurement">Measurement</string>
+    <string name="edit_stock">Number of Items</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_item_name">Name</string>
@@ -58,14 +64,11 @@
     <!-- Units for weight of the pet (kilograms) [CHAR LIMIT=5] -->
     <string name="unit_item_weight">kg</string>
 
-    <!-- Label for dropdown menu option if the pet's gender is unknown [CHAR LIMIT=20] -->
-    <string name="type_others">Others</string>
+    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
+    <string name="image_from_sdcard">Add image from sdcard</string>
 
-    <!-- Label for dropdown menu option if the pet is male [CHAR LIMIT=20] -->
-    <string name="type_aaa">AAA</string>
-
-    <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
-    <string name="type_bbb">BBB</string>
+    <!-- Label for image [CHAR LIMIT=20] -->
+    <string name="category_image">Image</string>
 
     <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
     <string name="empty_view_title_text">It\'s a bit lonely here...</string>
@@ -92,12 +95,16 @@
     <string name="cancel">Cancel</string>
     <string name="editor_delete_item_failed">Error with deleting item</string>
     <string name="editor_delete_item_successful">Item deleted</string>
-    <string name="unknown_type">Unknown Type</string>
+    <string name="unknown_producer">Unknown Type</string>
 
     <string name="discard_deleting">I do not want to delete all data</string>
     <string name="keep_deleting">I am sure to delete whole data</string>
-    <string name="delete_all_items">items deleted. Database is empty</string>
+    <string name="delete_all_items">items moved to recycle bin</string>
     <string name="delete_allitems_dialog_msg">Are you sure to delete all items?</string>
+    <string name="final_delete_all_items">items deleted. Database is empty</string>
+    <string name="final_delete_allitems_dialog_msg">Are you sure to final delete all items?</string>
+
+
 
 
 </resources>

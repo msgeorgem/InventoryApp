@@ -56,7 +56,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+                Intent intent = new Intent(CatalogActivity.this, EditorAcitvity.class);
                 startActivity(intent);
             }
         });
@@ -74,7 +74,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         petListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+                Intent intent = new Intent(CatalogActivity.this, EditorAcitvity.class);
                 //From the content URI that represents the specific pet that was clicked on,
                 //by appending the "id" (passed as input to this method)onto the
                 //{@link ItemEntry#CONTENT_URI}.
@@ -90,21 +90,28 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         //kick off the loader
         getSupportLoaderManager().initLoader(ITEM_LOADER, null,this);
     }
+//    private void insertImage(View view){
+//
+//        FileInputStream fis = new FileInputStream("/storage/emulated/0/DCIM/Camera/IMG_20170405_185833.jpg");
+//        byte[] image = new byte[fis.available()];
+//        fis.read(image);
+//    }
+
 
     private void insertPet(){
 
         // Create a ContentValues object, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, "MPhone123");
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, "Description");
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER, "MasterProducer");
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_TYPE, InventoryContract.ItemEntry.TYPE_AAA);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_WEIGHT, 7);
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_STOCK, 0);
+//        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, );
 
         // Insert the new row, returning the primary key value of the new row
         Uri newUri = getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
     }
     private void deleteAllItems(){
-        showDeleteConfirmationDialogAllItems();
         int rowsDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, null, null);
         Toast.makeText(this, rowsDeleted +" "+ getString(R.string.delete_all_items), Toast.LENGTH_SHORT).show();
     }
@@ -163,9 +170,11 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         String[] projection = {
                 InventoryContract.ItemEntry._ID,
                 InventoryContract.ItemEntry.COLUMN_ITEM_NAME,
-                InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER,
-        //      InventoryContract.ItemEntry.COLUMN_ITEM_TYPE,
-        //      InventoryContract.ItemEntry.COLUMN_ITEM_WEIGHT
+                InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION,
+//                InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER,
+//                InventoryContract.ItemEntry.COLUMN_ITEM_STOCK
+//                InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE,
+
         };
 
         // Perform a query using CursorLoader

@@ -53,11 +53,12 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create a String that contains the SQL statement to create the items table
         String SQL_CREATE_ITEMS_TABLE =  "CREATE TABLE " + ItemEntry.TABLE_NAME + " ("
-                + ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + InventoryContract.ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + InventoryContract.ItemEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, "
-                + ItemEntry.COLUMN_ITEM_PRODUCER + " TEXT, "
-                + ItemEntry.COLUMN_ITEM_TYPE + " INTEGER NOT NULL, "
-                + InventoryContract.ItemEntry.COLUMN_ITEM_WEIGHT + " INTEGER NOT NULL DEFAULT 0);";
+                + InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION + " TEXT, "
+                + InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER + " TEXT NOT NULL, "
+                + InventoryContract.ItemEntry.COLUMN_ITEM_STOCK + " INTEGER NOT NULL DEFAULT 0,"
+                + InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE + " BLOB);";
 
         Log.v(LOG_TAG,SQL_CREATE_ITEMS_TABLE);
         // Execute the SQL statement
@@ -65,11 +66,12 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
 
         // Create a String that contains the SQL statement to create the temporary backup items table
         String SQL_CREATE_ITEMS_BACKUP_TABLE =  "CREATE TABLE " + ItemEntry.TEMP_BACKUP_TABLE_NAME + " ("
-                + ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + InventoryContract.ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + InventoryContract.ItemEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, "
-                + ItemEntry.COLUMN_ITEM_PRODUCER + " TEXT, "
-                + ItemEntry.COLUMN_ITEM_TYPE + " INTEGER NOT NULL, "
-                + InventoryContract.ItemEntry.COLUMN_ITEM_WEIGHT + " INTEGER NOT NULL DEFAULT 0);";
+                + InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION + " TEXT NOT NULL, "
+                + InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER + " TEXT NOT NULL, "
+                + InventoryContract.ItemEntry.COLUMN_ITEM_STOCK + " INTEGER NOT NULL DEFAULT 0,"
+                + InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE + " BLOB);";
 
         Log.v(LOG_TAG,SQL_CREATE_ITEMS_BACKUP_TABLE);
         // Execute the SQL statement
@@ -77,11 +79,12 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
 
         // Create a String that contains the SQL statement to create the items upload table
         String SQL_CREATE_ITEMS_UPLOAD_TABLE =  "CREATE TABLE " + ItemEntry.UPLOAD_TABLE_NAME+ " ("
-                + ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + InventoryContract.ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + InventoryContract.ItemEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, "
-                + ItemEntry.COLUMN_ITEM_PRODUCER + " TEXT, "
-                + ItemEntry.COLUMN_ITEM_TYPE + " INTEGER NOT NULL, "
-                + InventoryContract.ItemEntry.COLUMN_ITEM_WEIGHT + " INTEGER NOT NULL DEFAULT 0);";
+                + InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION + " TEXT NOT NULL, "
+                + InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER + " TEXT NOT NULL, "
+                + InventoryContract.ItemEntry.COLUMN_ITEM_STOCK + " INTEGER NOT NULL DEFAULT 0,"
+                + InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE + " BLOB);";
 
         Log.v(LOG_TAG,SQL_CREATE_ITEMS_UPLOAD_TABLE);
         // Execute the SQL statement
