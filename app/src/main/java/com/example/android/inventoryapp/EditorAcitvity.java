@@ -12,10 +12,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,11 +34,10 @@ import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.InventoryContract;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Allows user to create a new item or edit an existing one.
@@ -77,6 +78,11 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
      * ImageView field to add an image
      */
     private ImageView mImageView;
+
+
+    private String mCurrentPhotoPath;
+
+    private static int REQUEST_TAKE_PHOTO = 1;
 
     // restore the info about image from external
     private byte[] mImageByteArray;
@@ -126,14 +132,13 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         mStockEditText = (EditText) findViewById(R.id.edit_stock);
         mImageView = (ImageView) findViewById(R.id.inserted_image);
 
-        Button setImage = (Button) findViewById(R.id.insert_image);
-        setImage.setOnClickListener(new View.OnClickListener() {
+        Button imageButton = (Button) findViewById(R.id.insert_image);
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getImageFromExternal();
+                dispatchTakePictureIntent();
             }
         });
-
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mDescriptionEditText.setOnTouchListener(mTouchListener);
@@ -144,58 +149,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
 //        setupSpinner();
     }
 
-    // Search gallery to get image
-    private void getImageFromExternal() {
 
-        Intent mRequestFileIntent = new Intent(Intent.ACTION_PICK);
-        mRequestFileIntent.setType("image/jpg");
-        startActivityForResult(mRequestFileIntent, 0);
-    }
-
-    private byte[] getImageByteArray(FileDescriptor fd) {
-        Bitmap image = BitmapFactory.decodeFileDescriptor(fd);
-        mImageView.setImageBitmap(image);
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 0, stream);
-
-        return stream.toByteArray();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent returnIntent) {
-        // If the selection didn't work
-        if (resultCode != RESULT_OK) {
-            // Exit without doing anything else
-            return;
-        } else {
-            // Get the file's content URI from the incoming Intent
-            Uri returnUri = returnIntent.getData();
-            ParcelFileDescriptor mInputPFD;
-            /*
-             * Try to open the file for "read" access using the
-             * returned URI. If the file isn't found, write to the
-             * error log and return.
-             */
-            try {
-                /*
-                 * Get the content resolver instance for this context, and use it
-                 * to get a ParcelFileDescriptor for the file.
-                 */
-                mInputPFD = getContentResolver().openFileDescriptor(returnUri, "r");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Log.e("MainActivity", "File not found.");
-                return;
-            }
-            // Get a regular file descriptor for the file
-            FileDescriptor fd = mInputPFD.getFileDescriptor();
-
-            // save the image into database
-            mImageByteArray = getImageByteArray(fd);
-        }
-    }
 
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
@@ -242,44 +196,6 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
-//    /**
-//     * Setup the dropdown spinner that allows the user to select the gender of the pet.
-//     */
-//    private void setupSpinner() {
-//        // Create adapter for spinner. The list options are from the String array it will use
-//        // the spinner will use the default layout
-//        ArrayAdapter genderSpinnerAdapter = ArrayAdapter.createFromResource(this,
-//                R.array.array_type_options, android.R.layout.simple_spinner_item);
-//
-//        // Specify dropdown layout style - simple list view with 1 item per line
-//        genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-//
-//        // Apply the adapter to the spinner
-//        mProducerSpinner.setAdapter(genderSpinnerAdapter);
-//
-//        // Set the integer mSelected to the constant values
-//        mProducerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                String selection = (String) parent.getItemAtPosition(position);
-//                if (!TextUtils.isEmpty(selection)) {
-//                    if (selection.equals(getString(R.string.type_aaa))) {
-//                        mProducer = InventoryContract.ItemEntry.TYPE_AAA; // Male
-//                    } else if (selection.equals(getString(R.string.type_bbb))) {
-//                        mProducer = InventoryContract.ItemEntry.TYPE_BBB; // Female
-//                    } else {
-//                        mProducer = InventoryContract.ItemEntry.UNKNOWN; // Unknown
-//                    }
-//                }
-//            }
-//
-//            // Because AdapterView is an abstract class, onNothingSelected must be defined
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                mProducer = InventoryContract.ItemEntry.UNKNOWN; // Unknown
-//            }
-//        });
-//    }
 
     // Get user input from editor and save pet into database.
     private void savePet() throws IOException {
@@ -299,7 +215,10 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
                 TextUtils.isEmpty(nameString) &&
                 TextUtils.isEmpty(descriptionString)&&
                 TextUtils.isEmpty(producerString) &&
-                TextUtils.isEmpty(stockString)) {
+                TextUtils.isEmpty(stockString)&&
+                mImageByteArray == null) {
+
+            Toast.makeText(this, R.string.warning_invalid_input, Toast.LENGTH_SHORT).show();
             // Since no fields were modified, we can return early without creating a new pet.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -311,20 +230,13 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, descriptionString);
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER, producerString);
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_STOCK, stockString);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, mImageByteArray);
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
 
-        // If the weight is not provided by the user, don't try to parse the string into an
-        // integer value. Use 0 by default.
-        int weight = 0;
-        if (!TextUtils.isEmpty(stockString)) {
-            weight = Integer.parseInt(stockString);
-        }
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_STOCK, weight);
 
-        // Determine if this is a new or existing pet by checking if mCurrentPetUri is null or not
+        // Determine if this is a new or existing item by checking if mCurrentPetUri is null or not
         if (mCurrentItemUri == null) {
-            // This is a NEW pet, so insert a new pet into the provider,
-            // returning the content URI for the new pet.
+            // This is a NEW item, so insert a new item into the provider,
+            // returning the content URI for the item pet.
             Uri newUri = getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
 
             // Show a toast message depending on whether or not the insertion was successful.
@@ -336,9 +248,9 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, getString(R.string.editor_insert_item_success), Toast.LENGTH_SHORT).show();
             }
         } else {
-            // Otherwise this is an EXISTING pet, so update the pet with content URI: mCurrentPetUri
+            // Otherwise this is an EXISTING item, so update the itme with content URI: mCurrentItemUri
             // and pass in the new ContentValues. Pass in null for the selection and selection args
-            // because mCurrentPetUri will already identify the correct row in the database that
+            // because mCurrentItemUri will already identify the correct row in the database that
             // we want to modify.
             int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
 
@@ -518,34 +430,19 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
             String description = cursor.getString(descriptionColumnIndex);
             String producer = cursor.getString(producerColumnIndex);
             int stock = cursor.getInt(stockColumnIndex);
-            byte[] picture = cursor.getBlob(pictureColumnIndex);
+            String picture = cursor.getString(pictureColumnIndex);
 
-            //convert the byte[] into image
-            ByteArrayInputStream imageStream = new ByteArrayInputStream(picture);
-            Bitmap theImage= BitmapFactory.decodeStream(imageStream);
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
             mDescriptionEditText.setText(description);
             mProducerEditText.setText(producer);
             mStockEditText.setText(Integer.toString(stock));
-            mImageView.setImageBitmap(theImage);
+            mCurrentPhotoPath = picture;
+            loadImage();
+                cursor.close();
 
 
-
-            // Gender is a dropdown spinner, so map the constant value from the database
-            // into one of the dropdown options (0 is Unknown, 1 is Male, 2 is Female).
-            // Then call setSelection() so that option is displayed on screen as the current selection.
-//            switch (gender) {
-//                case InventoryContract.ItemEntry.TYPE_AAA:
-//                    mProducerSpinner.setSelection(1);
-//                    break;
-//                case InventoryContract.ItemEntry.TYPE_BBB:
-//                    mProducerSpinner.setSelection(2);
-//                    break;
-//                default:
-//                    mProducerSpinner.setSelection(0);
-//                    break;
             }
         }
 
@@ -557,9 +454,78 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         mDescriptionEditText.setText("");
         mProducerEditText.setText("");
         mStockEditText.setText("");
-//        mImageView.setImageBitmap("");
 
+    }
+    //This is the beginning of the logic having to do with taking and storing pictures
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            loadImage();
+        }
+    }
 
-//        mProducerSpinner.setSelection(0); // Select "Unknown" gender
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Log.e("MainActivity", "Error occurred while creating image file");
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+
+        }
+    }
+    private File createImageFile() throws IOException {
+        // Create an image file name
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void loadImage() {
+        // Get the dimensions of the View
+        int targetW = mImageView.getWidth();
+        int targetH = mImageView.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        Log.e("targetW", Integer.toString(targetW));
+        Log.e("targetH", Integer.toString(targetH));
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        mImageView.setImageBitmap(bitmap);
     }
 }

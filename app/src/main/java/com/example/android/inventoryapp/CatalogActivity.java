@@ -62,16 +62,16 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         });
 
         // Find the ListView which will be populated with the pet data
-        ListView petListView = (ListView) findViewById(R.id.list_view);
+        ListView itemListView = (ListView) findViewById(R.id.list_view);
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
-        petListView.setEmptyView(emptyView);
+        itemListView.setEmptyView(emptyView);
 
         mCursorAdapter = new InventoryCursorAdapter(this, null);
-        petListView.setAdapter(mCursorAdapter);
+        itemListView.setAdapter(mCursorAdapter);
 
         //Setup item click listener
-        petListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(CatalogActivity.this, EditorAcitvity.class);
@@ -90,15 +90,10 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         //kick off the loader
         getSupportLoaderManager().initLoader(ITEM_LOADER, null,this);
     }
-//    private void insertImage(View view){
-//
-//        FileInputStream fis = new FileInputStream("/storage/emulated/0/DCIM/Camera/IMG_20170405_185833.jpg");
-//        byte[] image = new byte[fis.available()];
-//        fis.read(image);
-//    }
 
 
-    private void insertPet(){
+
+    private void insertItem(){
 
         // Create a ContentValues object, where column names are the keys
         ContentValues values = new ContentValues();
@@ -155,7 +150,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         switch (item.getItemId()) {
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
-                insertPet();
+                insertItem();
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
