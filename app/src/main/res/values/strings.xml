@@ -14,13 +14,13 @@
     <!-- Name for the application [CHAR LIMIT=12] -->
     <string name="app_name">Inventory</string>
 
-    <!-- Label for overflow menu option that inserts fake pet data into the app [CHAR LIMIT=20] -->
+    <!-- Label for overflow menu option that inserts fake item data into the app [CHAR LIMIT=20] -->
     <string name="action_insert_dummy_data">Insert Dummy Data</string>
 
-    <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
+    <!-- Label for overflow menu option that deletes all item data in the app [CHAR LIMIT=20] -->
     <string name="action_delete_all_entries">Delete All items</string>
 
-    <!-- Label for overflow menu option that deletes all pet data in the app [CHAR LIMIT=20] -->
+    <!-- Label for overflow menu option that deletes all item data in the app [CHAR LIMIT=20] -->
     <string name="action_final_delete_all_entries">Final delete All items</string>
 
     <!-- Title for the activity to add a new pet [CHAR LIMIT=20] -->
@@ -37,7 +37,7 @@
     <!-- Message for toast [CHAR LIMIT=20] -->
     <string name="item_saved">Error with saving item</string>
 
-    <!-- Label for editor overflow menu option that deletes the current pet [CHAR LIMIT=20] -->
+    <!-- Label for editor overflow menu option that deletes the current item [CHAR LIMIT=20] -->
     <string name="action_delete">Delete</string>
 
     <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
@@ -53,19 +53,19 @@
     <string name="edit_stock">Number of Items</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_item_name">Name</string>
+    <string name="hint_item_name">Enter name of the item</string>
 
     <!-- Text hint for breed field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_item_type">Type</string>
+    <string name="hint_item_description">Describe the item</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_item_producer">Producer</string>
-
-    <!-- Units for weight of the pet (kilograms) [CHAR LIMIT=5] -->
-    <string name="unit_item_weight">kg</string>
+    <string name="hint_item_producer">Enter Producers name</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="image_from_sdcard">Add image from sdcard</string>
+    <string name="hint_item_stock">Enter number of items</string>
+
+    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
+    <string name="image_from_camera">Take a photo</string>
 
     <!-- Label for image [CHAR LIMIT=20] -->
     <string name="category_image">Image</string>
@@ -73,9 +73,9 @@
     <!-- Title text for the empty view, which describes the empty dog house image [CHAR LIMIT=50] -->
     <string name="empty_view_title_text">It\'s a bit lonely here...</string>
 
-    <!-- Subtitle text for the empty view that prompts the user to add a pet [CHAR LIMIT=50] -->
+    <!-- Subtitle text for the empty view that prompts the user to add an item [CHAR LIMIT=50] -->
     <string name="empty_view_subtitle_text">Get started by adding an Item</string>
-    <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
+
 
     <string name="editor_insert_item_failed">Error with saving item</string>
     <string name="editor_update_item_failed">Error with updating item</string>
@@ -90,12 +90,12 @@
     <string name="undeleted_changes_dialog_msg">Discard and quit deleting?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
-    <string name="delete_dialog_msg">Delete this pet?</string>
+    <string name="delete_dialog_msg">Delete this item?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="editor_delete_item_failed">Error with deleting item</string>
     <string name="editor_delete_item_successful">Item deleted</string>
-    <string name="unknown_producer">Unknown Type</string>
+    <string name="unknown_producer">Unknown producer</string>
 
     <string name="discard_deleting">I do not want to delete all data</string>
     <string name="keep_deleting">I am sure to delete whole data</string>

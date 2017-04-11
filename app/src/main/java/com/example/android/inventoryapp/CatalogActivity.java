@@ -78,11 +78,11 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 //From the content URI that represents the specific pet that was clicked on,
                 //by appending the "id" (passed as input to this method)onto the
                 //{@link ItemEntry#CONTENT_URI}.
-                Uri currentPetUri = ContentUris.withAppendedId(InventoryContract.ItemEntry.CONTENT_URI, id);
+                Uri currentItemUri = ContentUris.withAppendedId(InventoryContract.ItemEntry.CONTENT_URI, id);
 
                 //Set the URI on the data field of the intent
-                intent.setData(currentPetUri);
-                //Launch the {@link EditorActivity} to display the data fot the current pet.
+                intent.setData(currentItemUri);
+                //Launch the {@link EditorActivity} to display the data fot the current item.
                 startActivity(intent);
             }
         });
@@ -166,9 +166,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 InventoryContract.ItemEntry._ID,
                 InventoryContract.ItemEntry.COLUMN_ITEM_NAME,
                 InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION,
-//                InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER,
+                InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER,
 //                InventoryContract.ItemEntry.COLUMN_ITEM_STOCK
-//                InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE,
+                InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE,
 
         };
 

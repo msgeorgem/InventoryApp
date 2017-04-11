@@ -2,6 +2,9 @@ package com.example.android.inventoryapp;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,12 @@ import com.example.android.inventoryapp.data.InventoryContract;
  */
 
  public class InventoryCursorAdapter extends CursorAdapter {
+
+    private String mCursorPhotoPath;
+    /**
+     * ImageView field to add an image
+     */
+    private ImageView pictureImageView;
 
      /**
        * Constructs a new {@link InventoryCursorAdapter}.
@@ -69,23 +78,37 @@ import com.example.android.inventoryapp.data.InventoryContract;
 
         // Read the item attributes from the Cursor for the current item
         String itemName = cursor.getString(nameColumnIndex);
-//        String itemProducer = cursor.getString(producerColumnIndex);
-//        byte[] picture = cursor.getBlob(pictureColumnIndex);
+        String itemProducer = cursor.getString(producerColumnIndex);
+        String itemPicture = cursor.getString(pictureColumnIndex);
 
-        //convert the byte[] into image
-//        ByteArrayInputStream imageStream = new ByteArrayInputStream(picture);
-//        Bitmap theImage= BitmapFactory.decodeStream(imageStream);
 
-        // If the pet breed is empty string or null, then use some default text
-        // that says "Unknown breed", so the TextView isn't blank.
-//        if (TextUtils.isEmpty(itemProducer)) {
-//            itemProducer = context.getString(R.string.unknown_producer);
-//        }
+        // If the item producer is empty string or null, then use some default text
+        // that says "Unknown producer", so the TextView isn't blank.
+       if (TextUtils.isEmpty(itemProducer)) {
+           itemProducer = context.getString(R.string.unknown_producer);
+       }
 
         // Update the TextViews with the attributes for the current pet
         nameTextView.setText(itemName);
+        producerTextView.setText(itemProducer);
 
-//       producerTextView.setText(itemProducer);
-//        pictureImageView.setImageBitmap(theImage);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(itemPicture, options);
+        int photoW = options.outWidth;
+        int photoH = options.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/72, photoH/72);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = scaleFactor;
+        options.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(itemPicture, options);
+        pictureImageView.setImageBitmap(bitmap);
+
     }
+
 }

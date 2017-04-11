@@ -198,7 +198,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
 
 
     // Get user input from editor and save pet into database.
-    private void savePet() throws IOException {
+    private void saveItem() throws IOException {
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
@@ -209,7 +209,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
 
         // int weight = Integer.parseInt(weightString);
 
-        // Check if this is supposed to be a new pet
+        // Check if this is supposed to be a new item
         // and check if all the fields in the editor are blank
         if (mCurrentItemUri == null &&
                 TextUtils.isEmpty(nameString) &&
@@ -224,7 +224,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
             return;
         }
         // Create a ContentValues object where column names are the keys,
-        // and pet attributes from the editor are the values.
+        // and item attributes from the editor are the values.
         ContentValues values = new ContentValues();
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, nameString);
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, descriptionString);
@@ -236,7 +236,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         // Determine if this is a new or existing item by checking if mCurrentPetUri is null or not
         if (mCurrentItemUri == null) {
             // This is a NEW item, so insert a new item into the provider,
-            // returning the content URI for the item pet.
+            // returning the content URI for the item item.
             Uri newUri = getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
 
             // Show a toast message depending on whether or not the insertion was successful.
@@ -274,7 +274,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the pet.
-                deletePet();
+                deleteItem();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -295,7 +295,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
     /**
      * Perform the deletion of the pet in the database.
      */
-    private void deletePet() {
+    private void deleteItem() {
         // Only perform the delete if this is an existing pet.
         if (mCurrentItemUri != null) {
             // Call the ContentResolver to delete the pet at the given content URI.
@@ -347,7 +347,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
             case R.id.action_save:
                 // Save pet di database
                 try {
-                    savePet();
+                    saveItem();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

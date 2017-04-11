@@ -121,12 +121,12 @@ public class InventoryProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ITEMS:
-                return insertPet(uri, contentValues);
+                return insertItem(uri, contentValues);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
         }
     }
-    private Uri insertPet(Uri uri, ContentValues values) {
+    private Uri insertItem(Uri uri, ContentValues values) {
 
         // Check that the name is not null
         String name = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_NAME);

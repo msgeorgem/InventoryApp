@@ -34,7 +34,7 @@
         <EditText
             android:id="@+id/edit_items_name"
             style="@style/EditorFieldStyle"
-            android:hint="Name of the Product"
+            android:hint="@string/hint_item_name"
             android:inputType="textCapWords" />
     </LinearLayout>
 
@@ -54,7 +54,7 @@
         <EditText
             android:id="@+id/edit_description"
             style="@style/EditorFieldStyle"
-            android:hint="Name of the Product"
+            android:hint="@string/hint_item_description"
             android:inputType="text" />
     </LinearLayout>
 
@@ -72,7 +72,7 @@
         <EditText
             android:id="@+id/edit_producer"
             style="@style/EditorFieldStyle"
-            android:hint="Name of the Product"
+            android:hint="@string/hint_item_producer"
             android:inputType="textCapWords" />
     </LinearLayout>
 
@@ -90,7 +90,7 @@
         <EditText
             android:id="@+id/edit_stock"
             style="@style/EditorFieldStyle"
-            android:hint="Name of the Product"
+            android:hint="@string/hint_item_stock"
             android:inputType="number" />
     </LinearLayout>
     <!-- Measurement category -->
@@ -111,7 +111,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Choose File" />
+            android:text="@string/image_from_camera" />
 
         <View
             android:layout_width="0dp"
@@ -121,9 +121,9 @@
 
     <ImageView
         android:id="@+id/inserted_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="0dp"/>
 
 
 </LinearLayout>
