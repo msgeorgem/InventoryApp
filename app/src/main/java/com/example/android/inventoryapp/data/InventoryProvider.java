@@ -18,19 +18,26 @@ import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.
 
 public class InventoryProvider extends ContentProvider {
 
-    /** Database Helper object */
+    /**
+     * Database Helper object
+     */
     private InventoryDbHelper mDbHelper;
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
-    /** URI matcher code for the content URI for the items table */
+    /**
+     * URI matcher code for the content URI for the items table
+     */
     private static final int ITEMS = 100;
 
-    /** URI matcher code for the content URI for a single item in the items table */
+    /**
+     * URI matcher code for the content URI for a single item in the items table
+     */
     private static final int ITEM_ID = 101;
 
 
-
-       /**
+    /**
      * UriMatcher object to match a content URI to a corresponding code.
      * The input passed into the constructor represents the code to return for the root URI.
      * It's common to use NO_MATCH as the input for this case.
@@ -43,8 +50,9 @@ public class InventoryProvider extends ContentProvider {
         // should recognize. All paths added to the UriMatcher have a corresponding code to return
         // when a match is found.
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_ITEMS, ITEMS);
-        sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_ITEMS +"/#", ITEM_ID);
+        sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_ITEMS + "/#", ITEM_ID);
     }
+
     /**
      * Initialize the provider and the database helper object.
      */
@@ -95,7 +103,7 @@ public class InventoryProvider extends ContentProvider {
                 // arguments that will fill in the "?". Since we have 1 question mark in the
                 // selection, we have 1 String in the selection arguments' String array.
                 selection = _ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 // This will perform a query on the items table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
@@ -126,6 +134,7 @@ public class InventoryProvider extends ContentProvider {
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
         }
     }
+
     private Uri insertItem(Uri uri, ContentValues values) {
 
         // Check that the name is not null
@@ -170,6 +179,7 @@ public class InventoryProvider extends ContentProvider {
         // return the new URI with the ID appended to the end of it
         return ContentUris.withAppendedId(uri, id);
     }
+
     /**
      * Updates the data at the given selection and selection arguments, with the new ContentValues.
      */
@@ -184,7 +194,7 @@ public class InventoryProvider extends ContentProvider {
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
                 selection = _ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateItem(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
@@ -237,7 +247,6 @@ public class InventoryProvider extends ContentProvider {
         // Update the selected items in the inventory database table with the given ContentValues
         // Gets the database in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
 
 
         // Perform the update on the database and get the number of rows affected
@@ -294,6 +303,7 @@ public class InventoryProvider extends ContentProvider {
         // given URI has changed
 
     }
+
     /**
      * Returns the MIME type of data for the content URI.
      */

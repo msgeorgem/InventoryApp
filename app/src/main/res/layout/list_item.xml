@@ -15,7 +15,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:gravity="center"
-        android:src="@drawable/sample_image01" />
+        android:src="@drawable/ic_launcher" />
 
     <LinearLayout
         android:layout_width="0dp"

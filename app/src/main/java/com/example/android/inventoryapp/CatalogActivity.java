@@ -40,7 +40,7 @@ import com.example.android.inventoryapp.data.InventoryContract;
 /**
  * Displays list of items that were entered and stored in the app.
  */
-public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int ITEM_LOADER = 0;
     InventoryCursorAdapter mCursorAdapter;
@@ -71,7 +71,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         itemListView.setAdapter(mCursorAdapter);
 
         //Setup item click listener
-        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(CatalogActivity.this, EditorAcitvity.class);
@@ -88,12 +88,11 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         });
 
         //kick off the loader
-        getSupportLoaderManager().initLoader(ITEM_LOADER, null,this);
+        getSupportLoaderManager().initLoader(ITEM_LOADER, null, this);
     }
 
 
-
-    private void insertItem(){
+    private void insertItem() {
 
         // Create a ContentValues object, where column names are the keys
         ContentValues values = new ContentValues();
@@ -106,10 +105,12 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         // Insert the new row, returning the primary key value of the new row
         Uri newUri = getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
     }
-    private void deleteAllItems(){
+
+    private void deleteAllItems() {
         int rowsDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, null, null);
-        Toast.makeText(this, rowsDeleted +" "+ getString(R.string.delete_all_items), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, rowsDeleted + " " + getString(R.string.delete_all_items), Toast.LENGTH_SHORT).show();
     }
+
     private void showDeleteConfirmationDialogAllItems() {
         // Create an AlertDialog.Builder and set the message, and click listeners
         // for the postivie and negative buttons on the dialog.
@@ -135,7 +136,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_catalog.xml file.
