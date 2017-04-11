@@ -38,7 +38,7 @@ import android.widget.Toast;
 import com.example.android.inventoryapp.data.InventoryContract;
 
 /**
- * Displays list of pets that were entered and stored in the app.
+ * Displays list of items that were entered and stored in the app.
  */
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -61,7 +61,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             }
         });
 
-        // Find the ListView which will be populated with the pet data
+        // Find the ListView which will be populated with the item data
         ListView itemListView = (ListView) findViewById(R.id.list_view);
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
@@ -75,7 +75,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(CatalogActivity.this, EditorAcitvity.class);
-                //From the content URI that represents the specific pet that was clicked on,
+                //From the content URI that represents the specific item that was clicked on,
                 //by appending the "id" (passed as input to this method)onto the
                 //{@link ItemEntry#CONTENT_URI}.
                 Uri currentItemUri = ContentUris.withAppendedId(InventoryContract.ItemEntry.CONTENT_URI, id);
@@ -117,14 +117,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         builder.setMessage(R.string.delete_allitems_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Delete" button, so delete the pet.
+                // User clicked the "Delete" button, so delete the item.
                 deleteAllItems();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing the item.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
@@ -183,7 +183,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // Update {@link PetCursor Adapter with this new cursor containing updated pet data
+        // Update {@link ItemCursor Adapter with this new cursor containing updated item data
         mCursorAdapter.swapCursor(data);
 
 

@@ -16,8 +16,8 @@ import com.example.android.inventoryapp.data.InventoryContract;
 
 /**
  * {@link InventoryCursorAdapter} is an adapter for a list or grid view
- * that uses a {@link Cursor} of pet data as its data source. This adapter knows
- * how to create list items for each row of pet data in the {@link Cursor}.
+ * that uses a {@link Cursor} of item data as its data source. This adapter knows
+ * how to create list items for each row of item data in the {@link Cursor}.
  */
 
  public class InventoryCursorAdapter extends CursorAdapter {
@@ -54,8 +54,8 @@ import com.example.android.inventoryapp.data.InventoryContract;
     }
 
     /**
-     * This method binds the pet data (in the current row pointed to by cursor) to the given
-     * list item layout. For example, the name for the current pet can be set on the name TextView
+     * This method binds the item data (in the current row pointed to by cursor) to the given
+     * list item layout. For example, the name for the current item can be set on the name TextView
      * in the list item layout.
      *
      * @param view    Existing view, returned earlier by newView() method
@@ -70,7 +70,7 @@ import com.example.android.inventoryapp.data.InventoryContract;
         TextView producerTextView = (TextView) view.findViewById(R.id.producer);
         ImageView pictureImageView = (ImageView) view.findViewById(R.id.thumbnail);
 
-        // Find the columns of pet attributes that we're interested in
+        // Find the columns of item attributes that we're interested in
         int nameColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_NAME);
         int producerColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER);
         int pictureColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE);
@@ -88,7 +88,7 @@ import com.example.android.inventoryapp.data.InventoryContract;
            itemProducer = context.getString(R.string.unknown_producer);
        }
 
-        // Update the TextViews with the attributes for the current pet
+        // Update the TextViews with the attributes for the current item
         nameTextView.setText(itemName);
         producerTextView.setText(itemProducer);
 

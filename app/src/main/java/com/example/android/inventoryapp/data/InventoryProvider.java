@@ -22,10 +22,10 @@ public class InventoryProvider extends ContentProvider {
     private InventoryDbHelper mDbHelper;
     /** Tag for the log messages */
     public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
-    /** URI matcher code for the content URI for the pets table */
+    /** URI matcher code for the content URI for the items table */
     private static final int ITEMS = 100;
 
-    /** URI matcher code for the content URI for a single pet in the pets table */
+    /** URI matcher code for the content URI for a single item in the items table */
     private static final int ITEM_ID = 101;
 
 
@@ -51,7 +51,7 @@ public class InventoryProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
 
-        // Create and initialize a InventoryDbHelper object to gain access to the pets database.
+        // Create and initialize a InventoryDbHelper object to gain access to the items database.
         mDbHelper = new InventoryDbHelper(getContext());
         // Make sure the variable is a global variable, so it can be referenced from other
         // ContentProvider methods.
@@ -87,7 +87,7 @@ public class InventoryProvider extends ContentProvider {
                 break;
             case ITEM_ID:
                 // For the ITEM_ID code, extract out the ID from the URI.
-                // For an example URI such as "content://com.example.android.pets/pets/3",
+                // For an example URI such as "content://com.example.android.items/items/3",
                 // the selection will be "_id=?" and the selection argument will be a
                 // String array containing the actual ID of 3 in this case.
                 //
