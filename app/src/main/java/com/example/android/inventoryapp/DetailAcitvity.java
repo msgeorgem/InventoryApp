@@ -42,7 +42,7 @@ import java.util.Date;
 /**
  * Allows user to create a new item or edit an existing one.
  */
-public class EditorAcitvity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DetailAcitvity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
      * Identifier for the item data loader
@@ -67,12 +67,12 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
     /**
      * EditText field to enter the item's producer
      */
-    private EditText mProducerEditText;
+    private EditText mPriceEditText;
 
     /**
      * EditText field to enter the item's stock
      */
-    private EditText mStockEditText;
+    private EditText mQuantityEditText;
 
     /**
      * ImageView field to add an image
@@ -101,7 +101,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editor);
+        setContentView(R.layout.activity_detail);
 
         // Examine the intent that was used to launch this activity,
         // in order to figure out if we're creating a new item or editing an existing one.
@@ -128,8 +128,8 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         // Find all relevant views that we will need to read user input from
         mNameEditText = (EditText) findViewById(R.id.edit_items_name);
         mDescriptionEditText = (EditText) findViewById(R.id.edit_description);
-        mProducerEditText = (EditText) findViewById(R.id.edit_producer);
-        mStockEditText = (EditText) findViewById(R.id.edit_stock);
+        mPriceEditText = (EditText) findViewById(R.id.edit_price);
+        mQuantityEditText = (EditText) findViewById(R.id.edit_quantity);
         mImageView = (ImageView) findViewById(R.id.inserted_image);
 
         Button imageButton = (Button) findViewById(R.id.insert_image);
@@ -142,8 +142,8 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mDescriptionEditText.setOnTouchListener(mTouchListener);
-        mProducerEditText.setOnTouchListener(mTouchListener);
-        mStockEditText.setOnTouchListener(mTouchListener);
+        mPriceEditText.setOnTouchListener(mTouchListener);
+        mQuantityEditText.setOnTouchListener(mTouchListener);
         mImageView.setOnTouchListener(mTouchListener);
 
 //        setupSpinner();
@@ -203,8 +203,8 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
         String descriptionString = mDescriptionEditText.getText().toString().trim();
-        String producerString = mProducerEditText.getText().toString().trim();
-        String stockString = mStockEditText.getText().toString().trim();
+        String priceString = mPriceEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
 
 
         // int weight = Integer.parseInt(weightString);
@@ -214,8 +214,8 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentItemUri == null &&
                 TextUtils.isEmpty(nameString) &&
                 TextUtils.isEmpty(descriptionString)&&
-                TextUtils.isEmpty(producerString) &&
-                TextUtils.isEmpty(stockString)&&
+                TextUtils.isEmpty(priceString) &&
+                TextUtils.isEmpty(quantityString)&&
                 mImageByteArray == null) {
 
             Toast.makeText(this, R.string.warning_invalid_input, Toast.LENGTH_SHORT).show();
@@ -228,8 +228,8 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         ContentValues values = new ContentValues();
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, nameString);
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, descriptionString);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER, producerString);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_STOCK, stockString);
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE, priceString);
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, quantityString);
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
 
 
@@ -364,7 +364,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
                 // If the item hasn't changed, continue with navigating up to parent activity
                 // which is the {@link CatalogActivity}.
                 if (!mItemHasChanged) {
-                    NavUtils.navigateUpFromSameTask(EditorAcitvity.this);
+                    NavUtils.navigateUpFromSameTask(DetailAcitvity.this);
                     return true;
                 }
 
@@ -376,7 +376,7 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // User clicked "Discard" button, navigate to parent activity.
-                                NavUtils.navigateUpFromSameTask(EditorAcitvity.this);
+                                NavUtils.navigateUpFromSameTask(DetailAcitvity.this);
                             }
                         };
 
@@ -395,8 +395,8 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
                 InventoryContract.ItemEntry._ID,
                 InventoryContract.ItemEntry.COLUMN_ITEM_NAME,
                 InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION,
-                InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER,
-                InventoryContract.ItemEntry.COLUMN_ITEM_STOCK,
+                InventoryContract.ItemEntry.COLUMN_ITEM_PRICE,
+                InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY,
                 InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE};
 
         // This loader will execute the ContentProvider's query method on a background thread
@@ -421,8 +421,8 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
             // Find the columns of item attributes that we're interested in
             int nameColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_NAME);
             int descriptionColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION);
-            int producerColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER);
-            int stockColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_STOCK);
+            int producerColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE);
+            int stockColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY);
             int pictureColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE);
 
             // Extract out the value from the Cursor for the given column index
@@ -436,8 +436,8 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
             mDescriptionEditText.setText(description);
-            mProducerEditText.setText(producer);
-            mStockEditText.setText(Integer.toString(stock));
+            mPriceEditText.setText(producer);
+            mQuantityEditText.setText(Integer.toString(stock));
             mCurrentPhotoPath = picture;
             loadImage();
                 cursor.close();
@@ -452,8 +452,8 @@ public class EditorAcitvity extends AppCompatActivity implements LoaderManager.L
         // If the loader is invalidated, clear out all the data from the input fields.
         mNameEditText.setText("");
         mDescriptionEditText.setText("");
-        mProducerEditText.setText("");
-        mStockEditText.setText("");
+        mPriceEditText.setText("");
+        mQuantityEditText.setText("");
 
     }
     //This is the beginning of the logic having to do with taking and storing pictures

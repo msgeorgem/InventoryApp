@@ -56,7 +56,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CatalogActivity.this, EditorAcitvity.class);
+                Intent intent = new Intent(CatalogActivity.this, DetailAcitvity.class);
                 startActivity(intent);
             }
         });
@@ -74,7 +74,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(CatalogActivity.this, EditorAcitvity.class);
+                Intent intent = new Intent(CatalogActivity.this, DetailAcitvity.class);
                 //From the content URI that represents the specific item that was clicked on,
                 //by appending the "id" (passed as input to this method)onto the
                 //{@link ItemEntry#CONTENT_URI}.
@@ -86,7 +86,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent);
             }
         });
-
         //kick off the loader
         getSupportLoaderManager().initLoader(ITEM_LOADER, null, this);
     }
@@ -96,11 +95,11 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         // Create a ContentValues object, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, "MPhone123");
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, "MPhone123456");
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, "Description");
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER, "MasterProducer");
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_STOCK, 0);
-//        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, );
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE, 100.23);
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, 55);
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, R.mipmap.ic_launcher);
 
         // Insert the new row, returning the primary key value of the new row
         Uri newUri = getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
@@ -167,8 +166,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 InventoryContract.ItemEntry._ID,
                 InventoryContract.ItemEntry.COLUMN_ITEM_NAME,
                 InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION,
-                InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER,
-//                InventoryContract.ItemEntry.COLUMN_ITEM_STOCK
+                InventoryContract.ItemEntry.COLUMN_ITEM_PRICE,
+                InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY,
                 InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE,
 
         };

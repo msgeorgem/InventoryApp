@@ -56,39 +56,14 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
                 + InventoryContract.ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + InventoryContract.ItemEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, "
                 + InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION + " TEXT, "
-                + InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER + " TEXT NOT NULL, "
-                + InventoryContract.ItemEntry.COLUMN_ITEM_STOCK + " INTEGER NOT NULL DEFAULT 0,"
+                + InventoryContract.ItemEntry.COLUMN_ITEM_PRICE + " INTEGER NOT NULL DEFAULT 0,"
+                + InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY + " INTEGER NOT NULL DEFAULT 0,"
                 + InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE + " BLOB);";
 
         Log.v(LOG_TAG,SQL_CREATE_ITEMS_TABLE);
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_ITEMS_TABLE);
 
-//        // Create a String that contains the SQL statement to create the temporary backup items table
-//        String SQL_CREATE_ITEMS_BACKUP_TABLE =  "CREATE TABLE " + ItemEntry.TEMP_BACKUP_TABLE_NAME + " ("
-//                + InventoryContract.ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-//                + InventoryContract.ItemEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, "
-//                + InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION + " TEXT NOT NULL, "
-//                + InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER + " TEXT NOT NULL, "
-//                + InventoryContract.ItemEntry.COLUMN_ITEM_STOCK + " INTEGER NOT NULL DEFAULT 0,"
-//                + InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE + " BLOB);";
-//
-//        Log.v(LOG_TAG,SQL_CREATE_ITEMS_BACKUP_TABLE);
-//        // Execute the SQL statement
-//        db.execSQL(SQL_CREATE_ITEMS_BACKUP_TABLE);
-//
-//        // Create a String that contains the SQL statement to create the items upload table
-//        String SQL_CREATE_ITEMS_UPLOAD_TABLE =  "CREATE TABLE " + ItemEntry.UPLOAD_TABLE_NAME+ " ("
-//                + InventoryContract.ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-//                + InventoryContract.ItemEntry.COLUMN_ITEM_NAME + " TEXT NOT NULL, "
-//                + InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION + " TEXT NOT NULL, "
-//                + InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER + " TEXT NOT NULL, "
-//                + InventoryContract.ItemEntry.COLUMN_ITEM_STOCK + " INTEGER NOT NULL DEFAULT 0,"
-//                + InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE + " BLOB);";
-//
-//        Log.v(LOG_TAG,SQL_CREATE_ITEMS_UPLOAD_TABLE);
-//        // Execute the SQL statement
-//        db.execSQL(SQL_CREATE_ITEMS_UPLOAD_TABLE);
    }
 
     /**

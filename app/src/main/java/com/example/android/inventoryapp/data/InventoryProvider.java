@@ -142,20 +142,20 @@ public class InventoryProvider extends ContentProvider {
         if (name == null) {
             throw new IllegalArgumentException("Item requires a name");
         }
-        // Check that the producer is not null
-        String producer = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER);
-        if (producer == null) {
-            throw new IllegalArgumentException("Item requires a producer");
+        // If the price is provided, check that it's greater than or equal to 0
+        Double price = values.getAsDouble(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE);
+        if (price != null && price < 0) {
+            throw new IllegalArgumentException("Item requires a valid price");
         }
         // Check that the description is not null
         String description = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION);
         if (description == null) {
             throw new IllegalArgumentException("Item requires valid description");
         }
-        // If the weight is provided, check that it's greater than or equal to 0 kg
-        Integer weight = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_STOCK);
-        if (weight != null && weight < 0) {
-            throw new IllegalArgumentException("Item requires valid weight");
+        // If the quantity is provided, check that it's greater than or equal to 0 pcs
+        Integer quantity = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY);
+        if (quantity != null && quantity < 0) {
+            throw new IllegalArgumentException("Item requires valid quantity");
         }
 
 
@@ -224,17 +224,17 @@ public class InventoryProvider extends ContentProvider {
             }
         }
 
-        // Check that the producer is not null
-        String producer = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_PRODUCER);
-        if (producer == null) {
-            throw new IllegalArgumentException("Item requires a producer");
+        // Check that the price is is greater than or equal to 0
+        Double price = values.getAsDouble(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE);
+        if (price != null && price < 0) {
+            throw new IllegalArgumentException("Item requires a valid price");
         }
 
-        // If the {@link ItemEntry#COLUMN_ITEM_STOCK} key is present,
+        // If the {@link ItemEntry#COLUMN_ITEM_QUANTITY} key is present,
         // check that the weight value is valid.
-        if (values.containsKey(InventoryContract.ItemEntry.COLUMN_ITEM_STOCK)) {
+        if (values.containsKey(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY)) {
             // Check that the weight is greater than or equal to 0 kg
-            Integer weight = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_STOCK);
+            Integer weight = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY);
             if (weight != null && weight < 0) {
                 throw new IllegalArgumentException("Item requires valid weight");
             }
@@ -298,9 +298,6 @@ public class InventoryProvider extends ContentProvider {
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
 
         }
-
-        // If 1 or more rows were deleted, then notify all listeners that the data at the
-        // given URI has changed
 
     }
 

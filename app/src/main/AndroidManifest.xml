@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.android.inventoryapp.EditorAcitvity"
+            android:name="com.example.android.inventoryapp.DetailAcitvity"
             android:theme="@style/AppTheme"
             android:parentActivityName="com.example.android.inventoryapp.CatalogActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->

@@ -47,10 +47,16 @@
     <string name="item_name">Item Name</string>
 
     <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
-    <string name="edit_producer">Producer</string>
+    <string name="edit_price">Price</string>
+
+    <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
+    <string name="price">Price in USD</string>
 
     <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
     <string name="edit_stock">Number of Items</string>
+
+    <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
+    <string name="quantity">Quantity</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_item_name">Enter name of the item</string>
@@ -59,10 +65,19 @@
     <string name="hint_item_description">Describe the item</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_item_producer">Enter Producers name</string>
+    <string name="hint_item_price">Enter the price </string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="hint_item_stock">Enter number of items</string>
+    <string name="sell">Sell</string>
+
+    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
+    <string name="add_stock">Add to Stock</string>
+
+    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
+    <string name="order">Order</string>
+
+    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_item_quantity">Enter number of items</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="image_from_camera">Take a photo</string>
