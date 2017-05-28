@@ -69,12 +69,15 @@
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="sell">Sell</string>
-
-    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
-    <string name="add_stock">Add to Stock</string>
+    <string name="sold">One Item Sold</string>
+    <string name="empty">Stock is empty. Make an order.</string>
+    <string name="added">  Items Added</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="order">Order</string>
+
+    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
+    <string name="add_stock">AddToStock</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_item_quantity">Enter number of items</string>
@@ -119,7 +122,6 @@
     <string name="final_delete_all_items">items deleted. Database is empty</string>
     <string name="final_delete_allitems_dialog_msg">Are you sure to final delete all items?</string>
     <string name="warning_invalid_input">Blank fields are not allowed</string>
-
 
 
 </resources>

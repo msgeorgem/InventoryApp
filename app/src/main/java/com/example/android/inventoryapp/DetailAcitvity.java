@@ -4,9 +4,11 @@ package com.example.android.inventoryapp;
  * Created by Marcin on 2017-04-06.
  */
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +23,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -32,64 +35,61 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.android.inventoryapp.data.InventoryContract;
+import com.example.android.inventoryapp.data.InventoryContract.ItemEntry;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION;
+import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_NAME;
+import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE;
+import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_PRICE;
+import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY;
+import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.CONTENT_URI;
+import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry._ID;
 /**
  * Allows user to create a new item or edit an existing one.
  */
 public class DetailAcitvity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String LOG = "DetailActivity";
     /**
      * Identifier for the item data loader
      */
     private static final int EXISTING_ITEM_LOADER = 0;
-
+    private static int REQUEST_TAKE_PHOTO = 1;
+    public int id;
+    public int mQuantity;
     /**
      * Content URI for the existing item (null if it's a new item)
      */
     private Uri mCurrentItemUri;
-
     /**
      * EditText field to enter the item's name
      */
     private EditText mNameEditText;
-
     /**
      * EditText field to enter the item's description
      */
     private EditText mDescriptionEditText;
-
     /**
      * EditText field to enter the item's producer
      */
     private EditText mPriceEditText;
-
     /**
      * EditText field to enter the item's stock
      */
     private EditText mQuantityEditText;
-
     /**
      * ImageView field to add an image
      */
     private ImageView mImageView;
-
-
     private String mCurrentPhotoPath;
-
-    private static int REQUEST_TAKE_PHOTO = 1;
-
     // restore the info about image from external
     private byte[] mImageByteArray;
-
-
     private boolean mItemHasChanged = false;
-
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -132,6 +132,25 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText = (EditText) findViewById(R.id.edit_quantity);
         mImageView = (ImageView) findViewById(R.id.inserted_image);
 
+
+        Button sellButton = (Button) findViewById(R.id.sell);
+        sellButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sellItem(id, mQuantity);
+            }
+        });
+
+        Button addButton = (Button) findViewById(R.id.add);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItemToStock(id, mQuantity);
+            }
+        });
+
+
+
         Button imageButton = (Button) findViewById(R.id.insert_image);
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +158,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 dispatchTakePictureIntent();
             }
         });
+
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mDescriptionEditText.setOnTouchListener(mTouchListener);
@@ -226,18 +246,18 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         // Create a ContentValues object where column names are the keys,
         // and item attributes from the editor are the values.
         ContentValues values = new ContentValues();
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, nameString);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, descriptionString);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE, priceString);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, quantityString);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
+        values.put(COLUMN_ITEM_NAME, nameString);
+        values.put(COLUMN_ITEM_DESCRIPTION, descriptionString);
+        values.put(COLUMN_ITEM_PRICE, priceString);
+        values.put(COLUMN_ITEM_QUANTITY, quantityString);
+        values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
 
 
         // Determine if this is a new or existing item by checking if mCurrentItemUri is null or not
         if (mCurrentItemUri == null) {
             // This is a NEW item, so insert a new item into the provider,
             // returning the content URI for the item item.
-            Uri newUri = getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
+            Uri newUri = getContentResolver().insert(CONTENT_URI, values);
 
             // Show a toast message depending on whether or not the insertion was successful.
             if (newUri == null) {
@@ -392,12 +412,12 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         // Since the editor shows all item attributes, define a projection that contains
         // all columns from the items table
         String[] projection = {
-                InventoryContract.ItemEntry._ID,
-                InventoryContract.ItemEntry.COLUMN_ITEM_NAME,
-                InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION,
-                InventoryContract.ItemEntry.COLUMN_ITEM_PRICE,
-                InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY,
-                InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE};
+                ItemEntry._ID,
+                COLUMN_ITEM_NAME,
+                COLUMN_ITEM_DESCRIPTION,
+                COLUMN_ITEM_PRICE,
+                COLUMN_ITEM_QUANTITY,
+                COLUMN_ITEM_PICTURE};
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
@@ -419,30 +439,30 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
             // Find the columns of item attributes that we're interested in
-            int nameColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_NAME);
-            int descriptionColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION);
-            int producerColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE);
-            int stockColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY);
-            int pictureColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE);
+            id = cursor.getInt(cursor.getColumnIndex(_ID));
+            int nameColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_NAME);
+            int descriptionColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_DESCRIPTION);
+            int priceColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_PRICE);
+            int stockColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_QUANTITY);
+            int pictureColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_PICTURE);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
             String description = cursor.getString(descriptionColumnIndex);
-            String producer = cursor.getString(producerColumnIndex);
-            int stock = cursor.getInt(stockColumnIndex);
+            int price = cursor.getInt(priceColumnIndex);
+            int quantity = cursor.getInt(stockColumnIndex);
             String picture = cursor.getString(pictureColumnIndex);
 
+            mQuantity = quantity;
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
             mDescriptionEditText.setText(description);
-            mPriceEditText.setText(producer);
-            mQuantityEditText.setText(Integer.toString(stock));
+            mPriceEditText.setText(Integer.toString(price));
+            mQuantityEditText.setText(Integer.toString(quantity));
             mCurrentPhotoPath = picture;
             loadImage();
                 cursor.close();
-
-
             }
         }
 
@@ -528,4 +548,69 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         mImageView.setImageBitmap(bitmap);
     }
+
+    private void sellItem(long id, int quantity) {
+        ContentUris.withAppendedId(CONTENT_URI, id);
+        mQuantity = quantity;
+        if (mQuantity > 0) {
+            mQuantity--;
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_ITEM_QUANTITY, mQuantity);
+            getContentResolver().update(mCurrentItemUri, values, null, null);
+            Toast.makeText(this, getString(R.string.sold), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.empty), Toast.LENGTH_SHORT).show();
+        }
+        mQuantityEditText.setText(Integer.toString(mQuantity));
+    }
+
+
+    private void addItemToStock(long id, int quantity) {
+        ContentUris.withAppendedId(CONTENT_URI, id);
+        mQuantity = quantity;
+        final int[] mAddToStock = new int[1];
+
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Add quantity to Stock ");
+//        alert.setMessage("Message");
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setRawInputType(Configuration.KEYBOARD_12KEY);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                // Do something with value!
+                String mInput = input.getText().toString().trim();
+                int finalValue = Integer.parseInt(mInput);
+                mAddToStock[0] = finalValue;
+                mQuantity = mQuantity + mAddToStock[0];
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_ITEM_QUANTITY, mQuantity);
+                getContentResolver().update(mCurrentItemUri, values, null, null);
+//                Toast.makeText("DetailActivity", getString(R.string.added), Toast.LENGTH_SHORT).show();
+
+                mQuantityEditText.setText(Integer.toString(mQuantity));
+
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+
+
+    }
+
+
 }
+
