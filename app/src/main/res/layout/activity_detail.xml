@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2016 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2016 The Android Open Source Project
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
@@ -9,8 +8,7 @@
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
      limitations under the License.
--->
-<!-- Layout for the editor -->
+--><!-- Layout for the editor -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,99 +17,99 @@
     android:padding="@dimen/activity_margin"
     tools:context=".DetailAcitvity">
 
-    <!-- Item category -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+    <!-- Item category -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <!-- Label -->
         <TextView
             style="@style/CategoryStyle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:text="@string/item_name" />
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/edit_description" />
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/edit_email" />
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/edit_price" />
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/edit_stock" />
 
-        <!-- Name field -->
-        <EditText
-            android:id="@+id/edit_items_name"
-            style="@style/EditorFieldStyle"
-            android:hint="@string/hint_item_name"
-            android:inputType="textCapWords" />
+
     </LinearLayout>
 
     <!-- Odescription category -->
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <!-- Label -->
-        <TextView
-            style="@style/CategoryStyle"
-            android:text="@string/edit_description" />
-
+        <!-- Name field -->
+        <EditText
+            android:id="@+id/edit_items_name"
+            style="@style/EditorFieldStyle"
+            android:layout_width="match_parent"
+            android:hint="@string/hint_item_name"
+            android:inputType="textCapWords" />
         <!-- Name field -->
         <EditText
             android:id="@+id/edit_description"
             style="@style/EditorFieldStyle"
+            android:layout_width="match_parent"
             android:hint="@string/hint_item_description"
             android:inputType="text" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!-- Label -->
-        <TextView
-            style="@style/CategoryStyle"
-            android:text="@string/edit_email" />
 
         <!-- Name field -->
         <EditText
             android:id="@+id/edit_email"
             style="@style/EditorFieldStyle"
+            android:layout_width="match_parent"
             android:hint="@string/hint_item_description"
             android:inputType="textEmailAddress" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!-- Label -->
-        <TextView
-            style="@style/CategoryStyle"
-            android:text="@string/edit_price" />
-
         <!-- Name field -->
         <EditText
             android:id="@+id/edit_price"
             style="@style/EditorFieldStyle"
+            android:layout_width="match_parent"
             android:hint="@string/hint_item_price"
             android:inputType="numberDecimal" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!-- Label -->
-        <TextView
-            style="@style/CategoryStyle"
-            android:text="@string/edit_stock" />
-
         <!-- Name field -->
-        <EditText
+        <TextView
             android:id="@+id/edit_quantity"
-            style="@style/EditorFieldStyle"
-            android:hint="@string/hint_item_quantity"
-            android:inputType="number" />
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
     </LinearLayout>
 
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -123,12 +121,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/sell" />
+
         <Button
             android:id="@+id/add"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/add_stock" />
+
         <Button
             android:id="@+id/order"
             android:layout_width="0dp"
@@ -146,14 +146,16 @@
         <!-- Label -->
         <TextView
             style="@style/CategoryStyle"
+            android:layout_width="wrap_content"
             android:text="@string/category_image" />
 
         <!-- Input fields -->
         <Button
             android:id="@+id/insert_image"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:elevation="0dp"
             android:text="@string/image_from_camera" />
 
         <View
@@ -166,7 +168,7 @@
         android:id="@+id/inserted_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="0dp"/>
+        android:layout_margin="0dp" />
 
 
 </LinearLayout>

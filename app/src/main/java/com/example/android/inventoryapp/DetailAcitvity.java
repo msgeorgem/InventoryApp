@@ -33,6 +33,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.InventoryContract.ItemEntry;
@@ -88,7 +89,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
     /**
      * EditText field to enter the item's stock
      */
-    private EditText mQuantityEditText;
+    private TextView mQuantityText;
     /**
      * ImageView field to add an image
      */
@@ -141,7 +142,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         mDescriptionEditText = (EditText) findViewById(R.id.edit_description);
         mEmailEditText = (EditText) findViewById(R.id.edit_email);
         mPriceEditText = (EditText) findViewById(R.id.edit_price);
-        mQuantityEditText = (EditText) findViewById(R.id.edit_quantity);
+        mQuantityText = (TextView) findViewById(R.id.edit_quantity);
         mImageView = (ImageView) findViewById(R.id.inserted_image);
 
 
@@ -181,7 +182,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         mDescriptionEditText.setOnTouchListener(mTouchListener);
         mEmailEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
-        mQuantityEditText.setOnTouchListener(mTouchListener);
+        mQuantityText.setOnTouchListener(mTouchListener);
         mImageView.setOnTouchListener(mTouchListener);
 
     }
@@ -239,7 +240,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String emailString = mEmailEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
-        String quantityString = mQuantityEditText.getText().toString().trim();
+        String quantityString = mQuantityText.getText().toString().trim();
 
         // Check if this is supposed to be a new item
         // and check if all the fields in the editor are blank
@@ -479,7 +480,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             mDescriptionEditText.setText(description);
             mEmailEditText.setText(email);
             mPriceEditText.setText(Integer.toString(price));
-            mQuantityEditText.setText(Integer.toString(quantity));
+            mQuantityText.setText(Integer.toString(quantity));
             mCurrentPhotoPath = picture;
             loadImage();
                 cursor.close();
@@ -493,7 +494,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         mDescriptionEditText.setText("");
         mEmailEditText.setText("");
         mPriceEditText.setText("");
-        mQuantityEditText.setText("");
+        mQuantityText.setText("");
 
     }
 
@@ -613,7 +614,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             alert.show();
 
         }
-        mQuantityEditText.setText(Integer.toString(mQuantity));
+        mQuantityText.setText(Integer.toString(mQuantity));
     }
 
     private void addItemToStock(long id, int quantity) {
@@ -639,13 +640,13 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 String mInput = input.getText().toString().trim();
                 int finalValue = Integer.parseInt(mInput);
                 mAddToStock[0] = finalValue;
-                mQuantity = mQuantity + mAddToStock[0];
+                int mAddedQuantity = mQuantity + mAddToStock[0];
                 ContentValues values = new ContentValues();
-                values.put(COLUMN_ITEM_QUANTITY, mQuantity);
+                values.put(COLUMN_ITEM_QUANTITY, mAddedQuantity);
                 getContentResolver().update(mCurrentItemUri, values, null, null);
 
 
-                mQuantityEditText.setText(Integer.toString(mQuantity));
+                mQuantityText.setText(Integer.toString(mQuantity));
                 Toast.makeText(getApplicationContext(), finalValue + " " + getString(R.string.added), Toast.LENGTH_SHORT).show();
             }
         });

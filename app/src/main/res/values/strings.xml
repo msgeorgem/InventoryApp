@@ -50,7 +50,7 @@
     <string name="item_name">Item Name</string>
 
     <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
-    <string name="edit_price">Price</string>
+    <string name="edit_price">Sell Price</string>
 
     <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
     <string name="price">Price in USD</string>
