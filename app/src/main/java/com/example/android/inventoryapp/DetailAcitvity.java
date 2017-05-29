@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION;
+import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL;
 import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_NAME;
 import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE;
 import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_PRICE;
@@ -54,7 +55,6 @@ import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.
  */
 public class DetailAcitvity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final String LOG = "DetailActivity";
     /**
      * Identifier for the item data loader
      */
@@ -62,6 +62,9 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
     private static int REQUEST_TAKE_PHOTO = 1;
     public int id;
     public int mQuantity;
+    public int mOrder;
+    public String mEmail;
+    public String mName;
     /**
      * Content URI for the existing item (null if it's a new item)
      */
@@ -74,6 +77,10 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
      * EditText field to enter the item's description
      */
     private EditText mDescriptionEditText;
+    /**
+     * EditText field to enter the suppliers e-mail
+     */
+    private EditText mEmailEditText;
     /**
      * EditText field to enter the item's producer
      */
@@ -97,6 +104,10 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             return false;
         }
     };
+
+    public final static boolean isValidEmail(CharSequence myEmail) {
+        return !TextUtils.isEmpty(myEmail) && android.util.Patterns.EMAIL_ADDRESS.matcher(myEmail).matches();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +139,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         // Find all relevant views that we will need to read user input from
         mNameEditText = (EditText) findViewById(R.id.edit_items_name);
         mDescriptionEditText = (EditText) findViewById(R.id.edit_description);
+        mEmailEditText = (EditText) findViewById(R.id.edit_email);
         mPriceEditText = (EditText) findViewById(R.id.edit_price);
         mQuantityEditText = (EditText) findViewById(R.id.edit_quantity);
         mImageView = (ImageView) findViewById(R.id.inserted_image);
@@ -137,7 +149,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         sellButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sellItem(id, mQuantity);
+                sellItem(id, mQuantity, mEmail, mName);
             }
         });
 
@@ -149,7 +161,13 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-
+        Button orderButton = (Button) findViewById(R.id.order);
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeAnOrder(id, mEmail, mName);
+            }
+        });
 
         Button imageButton = (Button) findViewById(R.id.insert_image);
         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -159,17 +177,14 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-
         mNameEditText.setOnTouchListener(mTouchListener);
         mDescriptionEditText.setOnTouchListener(mTouchListener);
+        mEmailEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mImageView.setOnTouchListener(mTouchListener);
 
-//        setupSpinner();
     }
-
-
 
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
@@ -216,24 +231,22 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
-
     // Get user input from editor and save item into database.
     private void saveItem() throws IOException {
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
         String descriptionString = mDescriptionEditText.getText().toString().trim();
+        String emailString = mEmailEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
-
-
-        // int weight = Integer.parseInt(weightString);
 
         // Check if this is supposed to be a new item
         // and check if all the fields in the editor are blank
         if (mCurrentItemUri == null &&
                 TextUtils.isEmpty(nameString) &&
                 TextUtils.isEmpty(descriptionString)&&
+                TextUtils.isEmpty(emailString) &&
                 TextUtils.isEmpty(priceString) &&
                 TextUtils.isEmpty(quantityString)&&
                 mImageByteArray == null) {
@@ -248,6 +261,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         ContentValues values = new ContentValues();
         values.put(COLUMN_ITEM_NAME, nameString);
         values.put(COLUMN_ITEM_DESCRIPTION, descriptionString);
+        values.put(COLUMN_ITEM_EMAIL, descriptionString);
         values.put(COLUMN_ITEM_PRICE, priceString);
         values.put(COLUMN_ITEM_QUANTITY, quantityString);
         values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
@@ -415,6 +429,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 ItemEntry._ID,
                 COLUMN_ITEM_NAME,
                 COLUMN_ITEM_DESCRIPTION,
+                COLUMN_ITEM_EMAIL,
                 COLUMN_ITEM_PRICE,
                 COLUMN_ITEM_QUANTITY,
                 COLUMN_ITEM_PICTURE};
@@ -442,6 +457,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             id = cursor.getInt(cursor.getColumnIndex(_ID));
             int nameColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_NAME);
             int descriptionColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_DESCRIPTION);
+            int emailColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_EMAIL);
             int priceColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_PRICE);
             int stockColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_QUANTITY);
             int pictureColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_PICTURE);
@@ -449,15 +465,19 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
             String description = cursor.getString(descriptionColumnIndex);
+            String email = cursor.getString(emailColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
             int quantity = cursor.getInt(stockColumnIndex);
             String picture = cursor.getString(pictureColumnIndex);
 
             mQuantity = quantity;
+            mEmail = email;
+            mName = name;
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
             mDescriptionEditText.setText(description);
+            mEmailEditText.setText(email);
             mPriceEditText.setText(Integer.toString(price));
             mQuantityEditText.setText(Integer.toString(quantity));
             mCurrentPhotoPath = picture;
@@ -466,16 +486,17 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             }
         }
 
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // If the loader is invalidated, clear out all the data from the input fields.
         mNameEditText.setText("");
         mDescriptionEditText.setText("");
+        mEmailEditText.setText("");
         mPriceEditText.setText("");
         mQuantityEditText.setText("");
 
     }
+
     //This is the beginning of the logic having to do with taking and storing pictures
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -507,6 +528,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
 
         }
     }
+
     private File createImageFile() throws IOException {
         // Create an image file name
 
@@ -549,9 +571,12 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         mImageView.setImageBitmap(bitmap);
     }
 
-    private void sellItem(long id, int quantity) {
+    private void sellItem(final long id, int quantity, String email, String name) {
         ContentUris.withAppendedId(CONTENT_URI, id);
         mQuantity = quantity;
+        mEmail = email;
+        mName = name;
+
         if (mQuantity > 0) {
             mQuantity--;
             ContentValues values = new ContentValues();
@@ -559,11 +584,37 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             getContentResolver().update(mCurrentItemUri, values, null, null);
             Toast.makeText(this, getString(R.string.sold), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, getString(R.string.empty), Toast.LENGTH_SHORT).show();
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("You have no items on stock!");
+            alert.setMessage("Would you like to place an order?");
+
+            alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+
+                    String subject = "XYZ order for: 5 pieces of " + mName;
+                    String orderSummary = "We would like to order 5 pieces of " + mName;
+                    Intent intent = new Intent(Intent.ACTION_SENDTO);
+                    intent.setData(Uri.parse("mailto: " + mEmail));
+                    intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                    intent.putExtra(Intent.EXTRA_TEXT, orderSummary);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                }
+            });
+
+            alert.setNegativeButton("NO. Will do later", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Canceled.
+                }
+            });
+
+            alert.show();
+
         }
         mQuantityEditText.setText(Integer.toString(mQuantity));
     }
-
 
     private void addItemToStock(long id, int quantity) {
         ContentUris.withAppendedId(CONTENT_URI, id);
@@ -574,7 +625,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle("Add quantity to Stock ");
-//        alert.setMessage("Message");
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
@@ -593,10 +643,10 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 ContentValues values = new ContentValues();
                 values.put(COLUMN_ITEM_QUANTITY, mQuantity);
                 getContentResolver().update(mCurrentItemUri, values, null, null);
-//                Toast.makeText("DetailActivity", getString(R.string.added), Toast.LENGTH_SHORT).show();
+
 
                 mQuantityEditText.setText(Integer.toString(mQuantity));
-
+                Toast.makeText(getApplicationContext(), finalValue + " " + getString(R.string.added), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -608,9 +658,50 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
 
         alert.show();
 
-
     }
 
+    private void makeAnOrder(long id, final String email, final String name) {
+        ContentUris.withAppendedId(CONTENT_URI, id);
+
+        mEmail = email;
+        mName = name;
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("How many items would you like to order?");
+        alert.setMessage("Your requested number of items is going " +
+                "to be passed to suppliers email which you can still edit");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setRawInputType(Configuration.KEYBOARD_12KEY);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                String mInput = input.getText().toString();
+//                int finalValue = Integer.parseInt(mInput);
+
+                String subject = "XYZ order for: " + mInput + " pieces of " + mName;
+                String orderSummary = "We would like to order " + mInput + " pieces of " + mName;
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto: " + mEmail));
+                intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                intent.putExtra(Intent.EXTRA_TEXT, orderSummary);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
 
 }
 

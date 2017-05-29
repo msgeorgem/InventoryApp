@@ -96,9 +96,10 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         // Create a ContentValues object, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, "MPhone123456");
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, "Description");
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, "New model");
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL, "john.supplier@jjj.com");
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE, 100.23);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, 55);
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, 1);
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, R.mipmap.ic_launcher);
 
         // Insert the new row, returning the primary key value of the new row

@@ -43,6 +43,9 @@
     <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
     <string name="edit_description">Description</string>
 
+    <!-- Label for overview category of attributes in the editor [CHAR LIMIT=30] -->
+    <string name="edit_email">Supplier e-mail</string>
+
     <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
     <string name="item_name">Item Name</string>
 
@@ -71,7 +74,7 @@
     <string name="sell">Sell</string>
     <string name="sold">One Item Sold</string>
     <string name="empty">Stock is empty. Make an order.</string>
-    <string name="added">  Items Added</string>
+    <string name="added">Items Added</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="order">Order</string>

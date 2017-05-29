@@ -19,10 +19,6 @@ import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.
 public class InventoryProvider extends ContentProvider {
 
     /**
-     * Database Helper object
-     */
-    private InventoryDbHelper mDbHelper;
-    /**
      * Tag for the log messages
      */
     public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
@@ -30,13 +26,10 @@ public class InventoryProvider extends ContentProvider {
      * URI matcher code for the content URI for the items table
      */
     private static final int ITEMS = 100;
-
     /**
      * URI matcher code for the content URI for a single item in the items table
      */
     private static final int ITEM_ID = 101;
-
-
     /**
      * UriMatcher object to match a content URI to a corresponding code.
      * The input passed into the constructor represents the code to return for the root URI.
@@ -52,6 +45,11 @@ public class InventoryProvider extends ContentProvider {
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_ITEMS, ITEMS);
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_ITEMS + "/#", ITEM_ID);
     }
+
+    /**
+     * Database Helper object
+     */
+    private InventoryDbHelper mDbHelper;
 
     /**
      * Initialize the provider and the database helper object.
@@ -152,6 +150,11 @@ public class InventoryProvider extends ContentProvider {
         if (description == null) {
             throw new IllegalArgumentException("Item requires valid description");
         }
+        // Check that the email is not null and valid
+        String email = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL);
+        if (email == null) {
+            throw new IllegalArgumentException("Item requires valid email");
+        }
         // If the quantity is provided, check that it's greater than or equal to 0 pcs
         Integer quantity = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY);
         if (quantity != null && quantity < 0) {
@@ -221,6 +224,12 @@ public class InventoryProvider extends ContentProvider {
             String description = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION);
             if (description == null) {
                 throw new IllegalArgumentException("Item requires valid description");
+            }
+        }
+        if (values.containsKey(InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL)) {
+            String description = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL);
+            if (description == null) {
+                throw new IllegalArgumentException("Item requires valid email");
             }
         }
 

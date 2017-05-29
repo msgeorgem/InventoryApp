@@ -66,6 +66,24 @@
         <!-- Label -->
         <TextView
             style="@style/CategoryStyle"
+            android:text="@string/edit_email" />
+
+        <!-- Name field -->
+        <EditText
+            android:id="@+id/edit_email"
+            style="@style/EditorFieldStyle"
+            android:hint="@string/hint_item_description"
+            android:inputType="textEmailAddress" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
             android:text="@string/edit_price" />
 
         <!-- Name field -->

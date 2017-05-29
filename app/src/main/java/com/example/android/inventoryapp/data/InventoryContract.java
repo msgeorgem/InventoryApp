@@ -13,10 +13,6 @@ import android.provider.BaseColumns;
 
 public final class InventoryContract {
 
-    // To prevent someone from accidentally instantiating the contract class,
-    // give it an empty constructor.
-    private InventoryContract() {}
-
     /**
      *
      * The "Content authority" is a name for the entire content provider, similar to the
@@ -25,13 +21,11 @@ public final class InventoryContract {
      * device.
      */
     public static final String CONTENT_AUTHORITY = "com.example.android.inventoryapp";
-
     /**
      * Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
      * the content provider.
      */
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-
     /**
      * Possible path (appended to base content URI for possible URI's)
      * For instance, content://com.example.android.inventoryapp/items/ is a valid path for
@@ -39,6 +33,11 @@ public final class InventoryContract {
      * as the ContentProvider hasn't been given any information on what to do with "staff".
      */
     public static final String PATH_ITEMS = "items";
+
+    // To prevent someone from accidentally instantiating the contract class,
+    // give it an empty constructor.
+    private InventoryContract() {
+    }
 
     /**
      * Inner class that defines constant values for the items database table.
@@ -52,6 +51,7 @@ public final class InventoryContract {
         public static final String _ID = BaseColumns._ID;
         public static final String COLUMN_ITEM_NAME = "name";
         public static final String COLUMN_ITEM_DESCRIPTION = "description";
+        public static final String COLUMN_ITEM_EMAIL = "email";
         public static final String COLUMN_ITEM_PRICE = "price";
         public static final String COLUMN_ITEM_QUANTITY = "quantity";
         public static final String COLUMN_ITEM_PICTURE = "image";
