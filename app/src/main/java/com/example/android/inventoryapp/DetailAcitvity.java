@@ -66,34 +66,20 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
     public int mOrder;
     public String mEmail;
     public String mName;
-    /**
-     * Content URI for the existing item (null if it's a new item)
-     */
+
     private Uri mCurrentItemUri;
-    /**
-     * EditText field to enter the item's name
-     */
     private EditText mNameEditText;
-    /**
-     * EditText field to enter the item's description
-     */
     private EditText mDescriptionEditText;
-    /**
-     * EditText field to enter the suppliers e-mail
-     */
     private EditText mEmailEditText;
-    /**
-     * EditText field to enter the item's producer
-     */
     private EditText mPriceEditText;
-    /**
-     * EditText field to enter the item's stock
-     */
+    private TextView mPriceText;
     private TextView mQuantityText;
-    /**
-     * ImageView field to add an image
-     */
+    private EditText mQuantityEditText;
     private ImageView mImageView;
+    private Button mSellButton;
+    private Button mAddButton;
+    private Button mOrderButton;
+    private Button mImageButton;
     private String mCurrentPhotoPath;
     // restore the info about image from external
     private byte[] mImageByteArray;
@@ -106,8 +92,11 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         }
     };
 
-    public final static boolean isValidEmail(CharSequence myEmail) {
-        return !TextUtils.isEmpty(myEmail) && android.util.Patterns.EMAIL_ADDRESS.matcher(myEmail).matches();
+    public final static boolean isValidEmail(CharSequence target) {
+        if (target == null)
+            return false;
+
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
     @Override
@@ -119,7 +108,49 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         // in order to figure out if we're creating a new item or editing an existing one.
         Intent intent = getIntent();
         mCurrentItemUri = intent.getData();
+        // Find all relevant views that we will need to read user input from
+        mNameEditText = (EditText) findViewById(R.id.edit_items_name);
+        mDescriptionEditText = (EditText) findViewById(R.id.edit_description);
+        mEmailEditText = (EditText) findViewById(R.id.edit_email);
+        mEmailEditText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        mPriceEditText = (EditText) findViewById(R.id.edit_price);
+        mPriceText = (TextView) findViewById(R.id.text_price);
+        mQuantityEditText = (EditText) findViewById(R.id.edit_quantity);
+        mQuantityText = (TextView) findViewById(R.id.text_quantity);
+        mImageView = (ImageView) findViewById(R.id.inserted_image);
 
+
+        mSellButton = (Button) findViewById(R.id.sell);
+        mSellButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sellItem(id, mQuantity, mEmail, mName);
+            }
+        });
+
+        mAddButton = (Button) findViewById(R.id.add);
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItemToStock(id, mQuantity);
+            }
+        });
+
+        mOrderButton = (Button) findViewById(R.id.order);
+        mOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeAnOrder(id, mEmail, mName);
+            }
+        });
+
+        mImageButton = (Button) findViewById(R.id.insert_image);
+        mImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent();
+            }
+        });
         // If the intent DOES NOT contain a item content URI, then we know that we are
         // creating a new item.
         if (mCurrentItemUri == null) {
@@ -127,62 +158,35 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             setTitle(getString(R.string.editor_activity_title_new_item));
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
             // (It doesn't make sense to delete a item that hasn't been created yet.)
+            mAddButton.setVisibility(View.GONE);
+            mSellButton.setVisibility(View.GONE);
+            mOrderButton.setVisibility(View.GONE);
+            mQuantityEditText.setVisibility(View.VISIBLE);
+            mQuantityText.setVisibility(View.GONE);
+            mPriceEditText.setVisibility(View.VISIBLE);
+            mPriceText.setVisibility(View.GONE);
             invalidateOptionsMenu();
         } else {
             // Otherwise this is an existing item, so change app bar to say "Edit Item"
             setTitle(getString(R.string.editor_activity_title_edit_item));
-
+            mAddButton.setVisibility(View.VISIBLE);
+            mSellButton.setVisibility(View.VISIBLE);
+            mOrderButton.setVisibility(View.VISIBLE);
+            mQuantityEditText.setVisibility(View.GONE);
+            mQuantityText.setVisibility(View.VISIBLE);
+            mPriceEditText.setVisibility(View.GONE);
+            mPriceText.setVisibility(View.VISIBLE);
             // Initialize a loader to read the item data from the database
             // and display the current values in the editor
             getSupportLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, this);
         }
 
-        // Find all relevant views that we will need to read user input from
-        mNameEditText = (EditText) findViewById(R.id.edit_items_name);
-        mDescriptionEditText = (EditText) findViewById(R.id.edit_description);
-        mEmailEditText = (EditText) findViewById(R.id.edit_email);
-        mPriceEditText = (EditText) findViewById(R.id.edit_price);
-        mQuantityText = (TextView) findViewById(R.id.edit_quantity);
-        mImageView = (ImageView) findViewById(R.id.inserted_image);
-
-
-        Button sellButton = (Button) findViewById(R.id.sell);
-        sellButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sellItem(id, mQuantity, mEmail, mName);
-            }
-        });
-
-        Button addButton = (Button) findViewById(R.id.add);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addItemToStock(id, mQuantity);
-            }
-        });
-
-        Button orderButton = (Button) findViewById(R.id.order);
-        orderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                makeAnOrder(id, mEmail, mName);
-            }
-        });
-
-        Button imageButton = (Button) findViewById(R.id.insert_image);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dispatchTakePictureIntent();
-            }
-        });
 
         mNameEditText.setOnTouchListener(mTouchListener);
         mDescriptionEditText.setOnTouchListener(mTouchListener);
         mEmailEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
-        mQuantityText.setOnTouchListener(mTouchListener);
+        mQuantityEditText.setOnTouchListener(mTouchListener);
         mImageView.setOnTouchListener(mTouchListener);
 
     }
@@ -234,13 +238,14 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
 
     // Get user input from editor and save item into database.
     private void saveItem() throws IOException {
+
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String emailString = mEmailEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
-        String quantityString = mQuantityText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
 
         // Check if this is supposed to be a new item
         // and check if all the fields in the editor are blank
@@ -255,15 +260,42 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             Toast.makeText(this, R.string.warning_invalid_input, Toast.LENGTH_SHORT).show();
             // Since no fields were modified, we can return early without creating a new item.
             // No need to create ContentValues and no need to do any ContentProvider operations.
+
             return;
         }
-        // Create a ContentValues object where column names are the keys,
-        // and item attributes from the editor are the values.
+        if (TextUtils.isEmpty(nameString)) {
+            Toast.makeText(this, getString(R.string.product_required), Toast.LENGTH_SHORT).show();
+            return;
+        }
         ContentValues values = new ContentValues();
         values.put(COLUMN_ITEM_NAME, nameString);
+
+        if (TextUtils.isEmpty(descriptionString)) {
+            Toast.makeText(this, getString(R.string.description_required), Toast.LENGTH_SHORT).show();
+            return;
+        }
         values.put(COLUMN_ITEM_DESCRIPTION, descriptionString);
-        values.put(COLUMN_ITEM_EMAIL, descriptionString);
+
+        if (TextUtils.isEmpty(emailString)) {
+            Toast.makeText(this, getString(R.string.email_required), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!isValidEmail(emailString)) {
+            Toast.makeText(this, getString(R.string.email_wrong), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        values.put(COLUMN_ITEM_EMAIL, emailString);
+
+        if (TextUtils.isEmpty(priceString)) {
+            Toast.makeText(this, getString(R.string.price_required), Toast.LENGTH_SHORT).show();
+            return;
+        }
         values.put(COLUMN_ITEM_PRICE, priceString);
+
+
+        // Create a ContentValues object where column names are the keys,
+        // and item attributes from the editor are the values.
+
         values.put(COLUMN_ITEM_QUANTITY, quantityString);
         values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
 
@@ -281,6 +313,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             } else {
                 // Otherwise, the insertion was successful and we can display a toast.
                 Toast.makeText(this, getString(R.string.editor_insert_item_success), Toast.LENGTH_SHORT).show();
+                finish();
             }
         } else {
             // Otherwise this is an EXISTING item, so update the itme with content URI: mCurrentItemUri
@@ -295,10 +328,11 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, getString(R.string.editor_update_item_failed), Toast.LENGTH_SHORT).show();
             } else {
                 // Otherwise, the update was successful and we can display a toast.
+
                 Toast.makeText(this, getString(R.string.editor_update_item_success), Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
-
     }
 
     private void showDeleteConfirmationDialog() {
@@ -386,8 +420,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                // Exit Activity
-                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -402,7 +434,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                     NavUtils.navigateUpFromSameTask(DetailAcitvity.this);
                     return true;
                 }
-
                 // Otherwise if there are unsaved changes, setup a dialog to warn the user.
                 // Create a click listener to handle the user confirming that
                 // changes should be discarded.
@@ -467,7 +498,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             String name = cursor.getString(nameColumnIndex);
             String description = cursor.getString(descriptionColumnIndex);
             String email = cursor.getString(emailColumnIndex);
-            int price = cursor.getInt(priceColumnIndex);
+            double price = cursor.getDouble(priceColumnIndex);
             int quantity = cursor.getInt(stockColumnIndex);
             String picture = cursor.getString(pictureColumnIndex);
 
@@ -479,8 +510,9 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             mNameEditText.setText(name);
             mDescriptionEditText.setText(description);
             mEmailEditText.setText(email);
-            mPriceEditText.setText(Integer.toString(price));
+            mPriceEditText.setText(Double.toString(price));
             mQuantityText.setText(Integer.toString(quantity));
+            mPriceText.setText(Double.toString(price));
             mCurrentPhotoPath = picture;
             loadImage();
                 cursor.close();
@@ -578,12 +610,16 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         mEmail = email;
         mName = name;
 
+
         if (mQuantity > 0) {
             mQuantity--;
             ContentValues values = new ContentValues();
             values.put(COLUMN_ITEM_QUANTITY, mQuantity);
             getContentResolver().update(mCurrentItemUri, values, null, null);
-            Toast.makeText(this, getString(R.string.sold), Toast.LENGTH_SHORT).show();
+            Toast toast;
+            Toast.makeText(this, getString(R.string.sold) + " " + mName, Toast.LENGTH_SHORT).show();
+
+            finish();
         } else {
 
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -646,7 +682,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 getContentResolver().update(mCurrentItemUri, values, null, null);
 
 
-                mQuantityText.setText(Integer.toString(mQuantity));
+                mQuantityText.setText(Integer.toString(mAddedQuantity));
                 Toast.makeText(getApplicationContext(), finalValue + " " + getString(R.string.added), Toast.LENGTH_SHORT).show();
             }
         });

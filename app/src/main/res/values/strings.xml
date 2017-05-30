@@ -66,13 +66,15 @@
 
     <!-- Text hint for breed field in the editor [CHAR LIMIT=30] -->
     <string name="hint_item_description">Describe the item</string>
+    <!-- Text hint for breed field in the editor [CHAR LIMIT=30] -->
+    <string name="hint_suppliers_email">Enter the email address</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_item_price">Enter the price </string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="sell">Sell</string>
-    <string name="sold">One Item Sold</string>
+    <string name="sold">You have just sold one: </string>
     <string name="empty">Stock is empty. Make an order.</string>
     <string name="added">Items Added</string>
 
@@ -126,5 +128,11 @@
     <string name="final_delete_allitems_dialog_msg">Are you sure to final delete all items?</string>
     <string name="warning_invalid_input">Blank fields are not allowed</string>
 
+    <string name="product_required">Product name required</string>
+    <string name="description_required">Description required</string>
+    <string name="email_required">Email required</string>
+    <string name="email_wrong">Wrong format of email</string>
+    <string name="price_required">Price required</string>
+    <string name="quantity_required">Quantity required</string>
 
 </resources>

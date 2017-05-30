@@ -141,8 +141,8 @@ public class InventoryProvider extends ContentProvider {
             throw new IllegalArgumentException("Item requires a name");
         }
         // If the price is provided, check that it's greater than or equal to 0
-        Double price = values.getAsDouble(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE);
-        if (price != null && price < 0) {
+        String price = values.getAsString(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE);
+        if (price == null) {
             throw new IllegalArgumentException("Item requires a valid price");
         }
         // Check that the description is not null

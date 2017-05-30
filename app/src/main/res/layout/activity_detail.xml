@@ -21,95 +21,110 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-    <!-- Item category -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        <!-- Item category -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <!-- Label -->
-        <TextView
-            style="@style/CategoryStyle"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="@string/item_name" />
-        <!-- Label -->
-        <TextView
-            style="@style/CategoryStyle"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="@string/edit_description" />
-        <!-- Label -->
-        <TextView
-            style="@style/CategoryStyle"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="@string/edit_email" />
-        <!-- Label -->
-        <TextView
-            style="@style/CategoryStyle"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="@string/edit_price" />
-        <!-- Label -->
-        <TextView
-            style="@style/CategoryStyle"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="@string/edit_stock" />
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/item_name" />
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/edit_description" />
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/edit_email" />
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/edit_price" />
+            <!-- Label -->
+            <TextView
+                style="@style/CategoryStyle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/edit_stock" />
 
+
+        </LinearLayout>
+
+        <!-- Odescription category -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Name field -->
+            <EditText
+                android:id="@+id/edit_items_name"
+                style="@style/EditorFieldStyle"
+                android:layout_width="match_parent"
+                android:hint="@string/hint_item_name"
+                android:inputType="textCapWords" />
+            <!-- Name field -->
+            <EditText
+                android:id="@+id/edit_description"
+                style="@style/EditorFieldStyle"
+                android:layout_width="match_parent"
+                android:hint="@string/hint_item_description"
+                android:inputType="text" />
+
+            <!-- Name field -->
+            <EditText
+                android:id="@+id/edit_email"
+                style="@style/EditorFieldStyle"
+                android:layout_width="match_parent"
+                android:hint="@string/hint_suppliers_email"
+                android:inputType="textEmailAddress" />
+            <!-- Name field -->
+            <EditText
+                android:id="@+id/edit_price"
+                style="@style/EditorFieldStyle"
+                android:layout_width="match_parent"
+                android:hint="@string/hint_item_price"
+                android:inputType="numberDecimal" />
+
+            <TextView
+                android:id="@+id/text_price"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            <!-- Name field -->
+            <EditText
+                android:id="@+id/edit_quantity"
+                style="@style/EditorFieldStyle"
+                android:layout_width="match_parent"
+                android:hint="@string/hint_item_quantity"
+                android:inputType="number" />
+
+            <TextView
+                android:id="@+id/text_quantity"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Odescription category -->
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <!-- Name field -->
-        <EditText
-            android:id="@+id/edit_items_name"
-            style="@style/EditorFieldStyle"
-            android:layout_width="match_parent"
-            android:hint="@string/hint_item_name"
-            android:inputType="textCapWords" />
-        <!-- Name field -->
-        <EditText
-            android:id="@+id/edit_description"
-            style="@style/EditorFieldStyle"
-            android:layout_width="match_parent"
-            android:hint="@string/hint_item_description"
-            android:inputType="text" />
-
-        <!-- Name field -->
-        <EditText
-            android:id="@+id/edit_email"
-            style="@style/EditorFieldStyle"
-            android:layout_width="match_parent"
-            android:hint="@string/hint_item_description"
-            android:inputType="textEmailAddress" />
-        <!-- Name field -->
-        <EditText
-            android:id="@+id/edit_price"
-            style="@style/EditorFieldStyle"
-            android:layout_width="match_parent"
-            android:hint="@string/hint_item_price"
-            android:inputType="numberDecimal" />
-        <!-- Name field -->
-        <TextView
-            android:id="@+id/edit_quantity"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-    </LinearLayout>
-
-    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
