@@ -50,30 +50,31 @@
             android:textColor="#2B3D4D" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="right"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <TextView
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-
+                android:layout_weight="1"
                 android:fontFamily="sans-serif"
+                android:gravity="right"
                 android:textAppearance="?android:textAppearanceMediumInverse"
                 android:textColor="#AEB6BD" />
 
 
             <TextView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-
+                android:layout_gravity="left"
+                android:layout_weight="1"
                 android:fontFamily="sans-serif"
                 android:text=" $"
                 android:textAppearance="?android:textAppearanceMediumInverse"
@@ -117,6 +118,7 @@
                 android:layout_gravity="left"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif"
+                android:gravity="right"
                 android:textAppearance="?android:textAppearanceMediumInverse"
                 android:textColor="#AEB6BD" />
 
@@ -128,6 +130,7 @@
                 android:layout_gravity="right"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif"
+                android:gravity="left"
                 android:text=" pcs"
                 android:textAppearance="?android:textAppearanceMediumInverse"
                 android:textColor="#AEB6BD" />

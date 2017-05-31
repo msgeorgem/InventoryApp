@@ -90,6 +90,8 @@
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="image_from_camera">Take a photo</string>
+    <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
+    <string name="image_from_sd">Image from SD</string>
 
     <!-- Label for image [CHAR LIMIT=20] -->
     <string name="category_image">Image</string>
