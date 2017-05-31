@@ -51,6 +51,7 @@ import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.
 import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY;
 import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry.CONTENT_URI;
 import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry._ID;
+
 /**
  * Allows user to create a new item or edit an existing one.
  */
@@ -76,10 +77,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
     private TextView mQuantityText;
     private EditText mQuantityEditText;
     private ImageView mImageView;
-    private Button mSellButton;
-    private Button mAddButton;
-    private Button mOrderButton;
-    private Button mImageButton;
     private String mCurrentPhotoPath;
     // restore the info about image from external
     private byte[] mImageByteArray;
@@ -92,11 +89,8 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         }
     };
 
-    public final static boolean isValidEmail(CharSequence target) {
-        if (target == null)
-            return false;
-
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    public static boolean isValidEmail(CharSequence target) {
+        return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
     @Override
@@ -120,7 +114,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         mImageView = (ImageView) findViewById(R.id.inserted_image);
 
 
-        mSellButton = (Button) findViewById(R.id.sell);
+        Button mSellButton = (Button) findViewById(R.id.sell);
         mSellButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +122,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-        mAddButton = (Button) findViewById(R.id.add);
+        Button mAddButton = (Button) findViewById(R.id.add);
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +130,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-        mOrderButton = (Button) findViewById(R.id.order);
+        Button mOrderButton = (Button) findViewById(R.id.order);
         mOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +138,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-        mImageButton = (Button) findViewById(R.id.insert_image);
+        Button mImageButton = (Button) findViewById(R.id.insert_image);
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,10 +245,10 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         // and check if all the fields in the editor are blank
         if (mCurrentItemUri == null &&
                 TextUtils.isEmpty(nameString) &&
-                TextUtils.isEmpty(descriptionString)&&
+                TextUtils.isEmpty(descriptionString) &&
                 TextUtils.isEmpty(emailString) &&
                 TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(quantityString)&&
+                TextUtils.isEmpty(quantityString) &&
                 mImageByteArray == null) {
 
             Toast.makeText(this, R.string.warning_invalid_input, Toast.LENGTH_SHORT).show();
@@ -515,9 +509,9 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             mPriceText.setText(Double.toString(price));
             mCurrentPhotoPath = picture;
             loadImage();
-                cursor.close();
-            }
+            cursor.close();
         }
+    }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -675,8 +669,13 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 // Do something with value!
                 String mInput = input.getText().toString().trim();
                 int finalValue = Integer.parseInt(mInput);
+
                 mAddToStock[0] = finalValue;
                 int mAddedQuantity = mQuantity + mAddToStock[0];
+                if (mAddedQuantity > 999) {
+                    Toast.makeText(getApplicationContext(), finalValue + " " + getString(R.string.tobig), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 ContentValues values = new ContentValues();
                 values.put(COLUMN_ITEM_QUANTITY, mAddedQuantity);
                 getContentResolver().update(mCurrentItemUri, values, null, null);

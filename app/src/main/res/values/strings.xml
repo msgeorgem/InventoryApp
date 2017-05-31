@@ -53,7 +53,7 @@
     <string name="edit_price">Sell Price</string>
 
     <!-- Label for gender information in the editor [CHAR LIMIT=30] -->
-    <string name="price">Price in USD</string>
+    <string name="price">Price</string>
 
     <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
     <string name="edit_stock">Number of Items</string>
@@ -77,6 +77,7 @@
     <string name="sold">You have just sold one: </string>
     <string name="empty">Stock is empty. Make an order.</string>
     <string name="added">Items Added</string>
+    <string name="tobig">Max item quantity cannot be over 999</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="order">Order</string>
