@@ -37,7 +37,7 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
+    public void onBindViewHolder(final ViewHolder viewHolder, Cursor cursor) {
 
         final long id;
 
@@ -77,7 +77,7 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
         viewHolder.priceTextView.setText(itemPrice);
         viewHolder.quantityTextView.setText(itemQuantity);
 
-        viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.onItemClick(id);
