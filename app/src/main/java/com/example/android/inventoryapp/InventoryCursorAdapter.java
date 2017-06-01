@@ -1,13 +1,12 @@
 package com.example.android.inventoryapp;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,58 +18,31 @@ import com.example.android.inventoryapp.data.InventoryContract;
  * how to create list items for each row of item data in the {@link Cursor}.
  */
 
-public class InventoryCursorAdapter extends CursorAdapter {
+public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCursorAdapter.ViewHolder> {
 
-    private String mCursorPhotoPath;
-    /**
-     * ImageView field to add an image
-     */
-    private ImageView pictureImageView;
+    private CatalogActivity activity = new CatalogActivity();
 
-    /**
-     * Constructs a new {@link InventoryCursorAdapter}.
-     *
-     * @param context The context
-     * @param c       The cursor from which to get the data.
-     */
-    public InventoryCursorAdapter(Context context, Cursor c) {
-        super(context, c, 0 /* flags */);
+
+    public InventoryCursorAdapter(CatalogActivity context, Cursor c) {
+        super(context, c);
+        this.activity = context;
     }
 
-    /**
-     * Makes a new blank list item view. No data is set (or bound) to the views yet.
-     *
-     * @param context app context
-     * @param cursor  The cursor from which to get the data. The cursor is already
-     *                moved to the correct position.
-     * @param parent  The parent to which the new view is attached to
-     * @return the newly created list item view.
-     */
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        //Fill out this method and return the list item view (instead of null)
-        return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item, parent, false);
+        ViewHolder vh = new ViewHolder(itemView);
+        return vh;
     }
 
-    /**
-     * This method binds the item data (in the current row pointed to by cursor) to the given
-     * list item layout. For example, the name for the current item can be set on the name TextView
-     * in the list item layout.
-     *
-     * @param view    Existing view, returned earlier by newView() method
-     * @param context app context
-     * @param cursor  The cursor from which to get the data. The cursor is already moved to the
-     *                correct row.
-     */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        /// Find individual views that we want to modify in the list item layout
-        TextView nameTextView = (TextView) view.findViewById(R.id.name);
-        TextView priceTextView = (TextView) view.findViewById(R.id.price);
-        TextView quantityTextView = (TextView) view.findViewById(R.id.quantity);
-        ImageView pictureImageView = (ImageView) view.findViewById(R.id.thumbnail);
+    public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
+
+        final long id;
 
         // Find the columns of item attributes that we're interested in
+        id = cursor.getLong(cursor.getColumnIndex(InventoryContract.ItemEntry._ID));
         int nameColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY);
@@ -82,19 +54,6 @@ public class InventoryCursorAdapter extends CursorAdapter {
         String itemPrice = cursor.getString(priceColumnIndex);
         String itemQuantity = cursor.getString(quantityColumnIndex);
         String itemPicture = cursor.getString(pictureColumnIndex);
-
-
-        // If the item producer is empty string or null, then use some default text
-        // that says "Unknown producer", so the TextView isn't blank.
-//       if (TextUtils.isEmpty(itemPrice)) {
-//           itemPrice = context.getString(R.string.unknown_producer);
-//       }
-
-        // Update the TextViews with the attributes for the current item
-        nameTextView.setText(itemName);
-        priceTextView.setText(itemPrice);
-        quantityTextView.setText(itemQuantity);
-
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -111,8 +70,37 @@ public class InventoryCursorAdapter extends CursorAdapter {
         options.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(itemPicture, options);
-        pictureImageView.setImageBitmap(bitmap);
+        viewHolder.pictureImageView.setImageBitmap(bitmap);
 
+        // Update the TextViews with the attributes for the current item
+        viewHolder.nameTextView.setText(itemName);
+        viewHolder.priceTextView.setText(itemPrice);
+        viewHolder.quantityTextView.setText(itemQuantity);
+
+        viewHolder.nameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.onItemClick(id);
+            }
+        });
+
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView nameTextView;
+        public TextView priceTextView;
+        public TextView quantityTextView;
+        public ImageView pictureImageView;
+
+
+        public ViewHolder(View view) {
+            super(view);
+            nameTextView = (TextView) view.findViewById(R.id.name);
+            priceTextView = (TextView) view.findViewById(R.id.price);
+            quantityTextView = (TextView) view.findViewById(R.id.quantity);
+            pictureImageView = (ImageView) view.findViewById(R.id.thumbnail);
+        }
     }
 
 }

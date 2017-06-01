@@ -138,4 +138,6 @@
     <string name="price_required">Price required</string>
     <string name="quantity_required">Quantity required</string>
 
+    <string name="dummy_pictureUri">android.resource://com.example.android.inventoryapp/drawable/cat.jpg</string>
+
 </resources>

@@ -28,11 +28,11 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.InventoryContract;
@@ -44,7 +44,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     private static final int ITEM_LOADER = 0;
     InventoryCursorAdapter mCursorAdapter;
-
+    View emptyView;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,46 +63,38 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             }
         });
 
-        // Find the ListView which will be populated with the item data
-        ListView itemListView = (ListView) findViewById(R.id.list_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.list_view);
+        mLayoutManager = new LinearLayoutManager(CatalogActivity.this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
-        View emptyView = findViewById(R.id.empty_view);
-        itemListView.setEmptyView(emptyView);
+        emptyView = findViewById(R.id.empty_view);
 
         mCursorAdapter = new InventoryCursorAdapter(this, null);
-        itemListView.setAdapter(mCursorAdapter);
+        mRecyclerView.setAdapter(mCursorAdapter);
 
-        //Setup item click listener
-        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(CatalogActivity.this, DetailAcitvity.class);
-                //From the content URI that represents the specific item that was clicked on,
-                //by appending the "id" (passed as input to this method)onto the
-                //{@link ItemEntry#CONTENT_URI}.
-                Uri currentItemUri = ContentUris.withAppendedId(InventoryContract.ItemEntry.CONTENT_URI, id);
-
-                //Set the URI on the data field of the intent
-                intent.setData(currentItemUri);
-                //Launch the {@link EditorActivity} to display the data fot the current item.
-                startActivity(intent);
-            }
-        });
         //kick off the loader
         getSupportLoaderManager().initLoader(ITEM_LOADER, null, this);
     }
 
+    public void onItemClick(long id) {
+        Intent intent = new Intent(CatalogActivity.this, DetailAcitvity.class);
+
+        Uri currentProductUri = ContentUris.withAppendedId(InventoryContract.ItemEntry.CONTENT_URI, id);
+        intent.setData(currentProductUri);
+
+        startActivity(intent);
+    }
 
     private void insertItem() {
 
         // Create a ContentValues object, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, "MPhone123456");
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, "New model");
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, "Kitten");
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, "Confused Kitten");
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL, "john.supplier@jjj.com");
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE, 100.23);
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, 1);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, R.mipmap.ic_launcher);
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, getString(R.string.dummy_pictureUri));
 
         // Insert the new row, returning the primary key value of the new row
         Uri newUri = getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
