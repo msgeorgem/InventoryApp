@@ -74,6 +74,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         //kick off the loader
         getSupportLoaderManager().initLoader(ITEM_LOADER, null, this);
+
     }
 
     public void onItemClick(long id) {
@@ -94,7 +95,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL, "john.supplier@jjj.com");
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE, 100.23);
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, 1);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, (getString(R.string.dummy_pictureUri)));
+//        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, getString(R.string.dummy_pictureUri));
 
         // Insert the new row, returning the primary key value of the new row
         getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
@@ -107,7 +108,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     private void showDeleteConfirmationDialogAllItems() {
         // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the postivie and negative buttons on the dialog.
+        // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_allitems_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -179,6 +180,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Update {@link ItemCursor Adapter with this new cursor containing updated item data
+
         mCursorAdapter.swapCursor(data);
 
 
