@@ -238,6 +238,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String emailString = mEmailEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
+
         if (mCurrentItemUri == null) {
             String quantityString = mQuantityEditText.getText().toString().trim();
             // Check if this is supposed to be a new item
@@ -285,10 +286,14 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             }
             values.put(COLUMN_ITEM_PRICE, priceString);
 
+            if (TextUtils.isEmpty(quantityString)) {
+                Toast.makeText(this, getString(R.string.quantity_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            values.put(COLUMN_ITEM_QUANTITY, quantityString);
             // Create a ContentValues object where column names are the keys,
             // and item attributes from the editor are the values.
 
-            values.put(COLUMN_ITEM_QUANTITY, quantityString);
             values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
 
             // This is a NEW item, so insert a new item into the provider,
@@ -350,7 +355,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 return;
             }
             values.put(COLUMN_ITEM_PRICE, priceString);
-
 
             // Create a ContentValues object where column names are the keys,
             // and item attributes from the editor are the values.
@@ -649,7 +653,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
     }
 
 
-    private void sellItem(final long id, int quantity, String email, String name) {
+    public void sellItem(final long id, int quantity, String email, String name) {
         ContentUris.withAppendedId(CONTENT_URI, id);
         mQuantity = quantity;
         mEmail = email;

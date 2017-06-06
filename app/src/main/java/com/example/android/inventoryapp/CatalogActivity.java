@@ -36,6 +36,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.InventoryContract;
+import com.example.android.inventoryapp.data.InventoryDbHelper;
+
+import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry._ID;
 
 /**
  * Displays list of items that were entered and stored in the app.
@@ -47,6 +50,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     View emptyView;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private InventoryDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +66,13 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent);
             }
         });
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        emptyView = findViewById(R.id.empty_view);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.list_view);
         mLayoutManager = new LinearLayoutManager(CatalogActivity.this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
-        emptyView = findViewById(R.id.empty_view);
+
 
         mCursorAdapter = new InventoryCursorAdapter(this, null);
         mRecyclerView.setAdapter(mCursorAdapter);
@@ -86,6 +91,20 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         startActivity(intent);
     }
 
+    public void onSellClick(long id, int quantity, String mName) {
+        Uri currentProductUri = ContentUris.withAppendedId(InventoryContract.ItemEntry.CONTENT_URI, id);
+
+        if (quantity > 0) {
+            quantity--;
+            ContentValues values = new ContentValues();
+            values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, quantity);
+            getContentResolver().update(currentProductUri, values, null, null);
+            Toast.makeText(this, getString(R.string.sold) + " " + mName, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.empty) + " " + mName, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void insertItem() {
 
         // Create a ContentValues object, where column names are the keys
@@ -101,9 +120,11 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     }
 
     private void deleteAllItems() {
+
         int rowsDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, null, null);
         Toast.makeText(this, rowsDeleted + " " + getString(R.string.delete_all_items), Toast.LENGTH_SHORT).show();
     }
+
 
     private void showDeleteConfirmationDialogAllItems() {
         // Create an AlertDialog.Builder and set the message, and click listeners
@@ -158,7 +179,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {
-                InventoryContract.ItemEntry._ID,
+                _ID,
                 InventoryContract.ItemEntry.COLUMN_ITEM_NAME,
                 InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION,
                 InventoryContract.ItemEntry.COLUMN_ITEM_PRICE,
@@ -179,7 +200,11 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Update {@link ItemCursor Adapter with this new cursor containing updated item data
-
+        if (!data.moveToFirst()) {
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+        }
         mCursorAdapter.swapCursor(data);
 
 

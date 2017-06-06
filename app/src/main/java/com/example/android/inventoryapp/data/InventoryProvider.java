@@ -242,10 +242,10 @@ public class InventoryProvider extends ContentProvider {
         // If the {@link ItemEntry#COLUMN_ITEM_QUANTITY} key is present,
         // check that the weight value is valid.
         if (values.containsKey(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY)) {
-            // Check that the weight is greater than or equal to 0 kg
-            Integer weight = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY);
-            if (weight != null && weight < 0) {
-                throw new IllegalArgumentException("Item requires valid weight");
+            // Check that the quantity is greater than or equal to 0 kg
+            Integer quantity = values.getAsInteger(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY);
+            if (quantity != null && quantity < 0) {
+                throw new IllegalArgumentException("Item requires valid quanity");
             }
         }
         // If there are no values to update, then don't try to update the database

@@ -40,6 +40,7 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
     public void onBindViewHolder(final ViewHolder viewHolder, Cursor cursor) {
 
         final long id;
+        final int mQuantity;
 
         // Find the columns of item attributes that we're interested in
         id = cursor.getLong(cursor.getColumnIndex(InventoryContract.ItemEntry._ID));
@@ -50,10 +51,13 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
 
 
         // Read the item attributes from the Cursor for the current item
-        String itemName = cursor.getString(nameColumnIndex);
+        final String itemName = cursor.getString(nameColumnIndex);
         String itemPrice = cursor.getString(priceColumnIndex);
-        String itemQuantity = cursor.getString(quantityColumnIndex);
+        int itemQuantity = cursor.getInt(quantityColumnIndex);
         String itemPicture = cursor.getString(pictureColumnIndex);
+
+
+        mQuantity = itemQuantity;
 
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -78,17 +82,22 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
 
         }
 
-
-
         // Update the TextViews with the attributes for the current item
         viewHolder.nameTextView.setText(itemName);
         viewHolder.priceTextView.setText(itemPrice);
-        viewHolder.quantityTextView.setText(itemQuantity);
+        viewHolder.sellItemTextView.setText(Integer.toString(itemQuantity));
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.onItemClick(id);
+            }
+        });
+
+        viewHolder.sellItemTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.onSellClick(id, mQuantity, itemName);
             }
         });
 
@@ -98,7 +107,7 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
 
         public TextView nameTextView;
         public TextView priceTextView;
-        public TextView quantityTextView;
+        public TextView sellItemTextView;
         public ImageView pictureImageView;
 
 
@@ -106,7 +115,7 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
             super(view);
             nameTextView = (TextView) view.findViewById(R.id.name);
             priceTextView = (TextView) view.findViewById(R.id.price);
-            quantityTextView = (TextView) view.findViewById(R.id.quantity);
+            sellItemTextView = (TextView) view.findViewById(R.id.sell_item);
             pictureImageView = (ImageView) view.findViewById(R.id.thumbnail);
         }
     }
