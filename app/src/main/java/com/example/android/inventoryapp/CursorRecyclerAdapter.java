@@ -66,7 +66,6 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 
         onBindViewHolder(holder, cur);
 
-
     }
 
     public void changeCursor(Cursor cursor) {

@@ -22,7 +22,6 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
 
     private CatalogActivity activity = new CatalogActivity();
 
-
     public InventoryCursorAdapter(CatalogActivity context, Cursor c) {
         super(context, c);
         this.activity = context;
@@ -78,7 +77,6 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
             Bitmap bitmap = BitmapFactory.decodeFile(itemPicture, options);
             viewHolder.pictureImageView.setImageBitmap(bitmap);
         } catch (NullPointerException e) {
-
 
         }
 

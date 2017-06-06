@@ -36,7 +36,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.InventoryContract;
-import com.example.android.inventoryapp.data.InventoryDbHelper;
 
 import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry._ID;
 
@@ -50,7 +49,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     View emptyView;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private InventoryDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +122,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         int rowsDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, null, null);
         Toast.makeText(this, rowsDeleted + " " + getString(R.string.delete_all_items), Toast.LENGTH_SHORT).show();
     }
-
 
     private void showDeleteConfirmationDialogAllItems() {
         // Create an AlertDialog.Builder and set the message, and click listeners
@@ -207,9 +204,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         }
         mCursorAdapter.swapCursor(data);
 
-
     }
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // Callback called when the data needs to be deleted
