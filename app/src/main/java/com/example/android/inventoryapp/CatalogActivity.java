@@ -95,8 +95,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL, "john.supplier@jjj.com");
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE, 100.23);
         values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, 1);
-//        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, getString(R.string.dummy_pictureUri));
-
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, getString(R.string.dummy_pictureUri));
         // Insert the new row, returning the primary key value of the new row
         getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
     }

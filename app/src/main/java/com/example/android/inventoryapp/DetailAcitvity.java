@@ -64,7 +64,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
     private static int REQUEST_TAKE_PHOTO = 1;
     public int id;
     public int mQuantity;
-    public int mOrder;
     public String mEmail;
     public String mName;
 
@@ -239,63 +238,59 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         String descriptionString = mDescriptionEditText.getText().toString().trim();
         String emailString = mEmailEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
-        String quantityString = mQuantityEditText.getText().toString().trim();
-
-        // Check if this is supposed to be a new item
-        // and check if all the fields in the editor are blank
-        if (mCurrentItemUri == null &&
-                TextUtils.isEmpty(nameString) &&
-                TextUtils.isEmpty(descriptionString) &&
-                TextUtils.isEmpty(emailString) &&
-                TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(quantityString) &&
-                mImageByteArray == null) {
-
-            Toast.makeText(this, R.string.warning_invalid_input, Toast.LENGTH_SHORT).show();
-            // Since no fields were modified, we can return early without creating a new item.
-            // No need to create ContentValues and no need to do any ContentProvider operations.
-
-            return;
-        }
-        if (TextUtils.isEmpty(nameString)) {
-            Toast.makeText(this, getString(R.string.product_required), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_ITEM_NAME, nameString);
-
-        if (TextUtils.isEmpty(descriptionString)) {
-            Toast.makeText(this, getString(R.string.description_required), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        values.put(COLUMN_ITEM_DESCRIPTION, descriptionString);
-
-        if (TextUtils.isEmpty(emailString)) {
-            Toast.makeText(this, getString(R.string.email_required), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!isValidEmail(emailString)) {
-            Toast.makeText(this, getString(R.string.email_wrong), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        values.put(COLUMN_ITEM_EMAIL, emailString);
-
-        if (TextUtils.isEmpty(priceString)) {
-            Toast.makeText(this, getString(R.string.price_required), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        values.put(COLUMN_ITEM_PRICE, priceString);
-
-
-        // Create a ContentValues object where column names are the keys,
-        // and item attributes from the editor are the values.
-
-        values.put(COLUMN_ITEM_QUANTITY, quantityString);
-        values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
-
-
-        // Determine if this is a new or existing item by checking if mCurrentItemUri is null or not
         if (mCurrentItemUri == null) {
+            String quantityString = mQuantityEditText.getText().toString().trim();
+            // Check if this is supposed to be a new item
+            // and check if all the fields in the editor are blank
+            if (mCurrentItemUri == null &&
+                    TextUtils.isEmpty(nameString) &&
+                    TextUtils.isEmpty(descriptionString) &&
+                    TextUtils.isEmpty(emailString) &&
+                    TextUtils.isEmpty(priceString) &&
+                    TextUtils.isEmpty(quantityString) &&
+                    mImageByteArray == null) {
+
+                Toast.makeText(this, R.string.warning_invalid_input, Toast.LENGTH_SHORT).show();
+                // Since no fields were modified, we can return early without creating a new item.
+                // No need to create ContentValues and no need to do any ContentProvider operations.
+
+                return;
+            }
+            if (TextUtils.isEmpty(nameString)) {
+                Toast.makeText(this, getString(R.string.product_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_ITEM_NAME, nameString);
+
+            if (TextUtils.isEmpty(descriptionString)) {
+                Toast.makeText(this, getString(R.string.description_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            values.put(COLUMN_ITEM_DESCRIPTION, descriptionString);
+
+            if (TextUtils.isEmpty(emailString)) {
+                Toast.makeText(this, getString(R.string.email_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!isValidEmail(emailString)) {
+                Toast.makeText(this, getString(R.string.email_wrong), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            values.put(COLUMN_ITEM_EMAIL, emailString);
+
+            if (TextUtils.isEmpty(priceString)) {
+                Toast.makeText(this, getString(R.string.price_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            values.put(COLUMN_ITEM_PRICE, priceString);
+
+            // Create a ContentValues object where column names are the keys,
+            // and item attributes from the editor are the values.
+
+            values.put(COLUMN_ITEM_QUANTITY, quantityString);
+            values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
+
             // This is a NEW item, so insert a new item into the provider,
             // returning the content URI for the item item.
             Uri newUri = getContentResolver().insert(CONTENT_URI, values);
@@ -310,6 +305,58 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 finish();
             }
         } else {
+            String quantityString = mQuantityText.getText().toString().trim();
+            // Check if this is supposed to be a new item
+            // and check if all the fields in the editor are blank
+            if (mCurrentItemUri == null &&
+                    TextUtils.isEmpty(nameString) &&
+                    TextUtils.isEmpty(descriptionString) &&
+                    TextUtils.isEmpty(emailString) &&
+                    TextUtils.isEmpty(priceString) &&
+                    TextUtils.isEmpty(quantityString) &&
+                    mImageByteArray == null) {
+
+                Toast.makeText(this, R.string.warning_invalid_input, Toast.LENGTH_SHORT).show();
+                // Since no fields were modified, we can return early without creating a new item.
+                // No need to create ContentValues and no need to do any ContentProvider operations.
+
+                return;
+            }
+            if (TextUtils.isEmpty(nameString)) {
+                Toast.makeText(this, getString(R.string.product_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_ITEM_NAME, nameString);
+
+            if (TextUtils.isEmpty(descriptionString)) {
+                Toast.makeText(this, getString(R.string.description_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            values.put(COLUMN_ITEM_DESCRIPTION, descriptionString);
+
+            if (TextUtils.isEmpty(emailString)) {
+                Toast.makeText(this, getString(R.string.email_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!isValidEmail(emailString)) {
+                Toast.makeText(this, getString(R.string.email_wrong), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            values.put(COLUMN_ITEM_EMAIL, emailString);
+
+            if (TextUtils.isEmpty(priceString)) {
+                Toast.makeText(this, getString(R.string.price_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            values.put(COLUMN_ITEM_PRICE, priceString);
+
+
+            // Create a ContentValues object where column names are the keys,
+            // and item attributes from the editor are the values.
+
+            values.put(COLUMN_ITEM_QUANTITY, quantityString);
+            values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
             // Otherwise this is an EXISTING item, so update the itme with content URI: mCurrentItemUri
             // and pass in the new ContentValues. Pass in null for the selection and selection args
             // because mCurrentItemUri will already identify the correct row in the database that
@@ -327,6 +374,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 finish();
             }
         }
+
     }
 
     private void showDeleteConfirmationDialog() {
@@ -575,6 +623,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void loadImage() {
+
         // Get the dimensions of the View
         int targetW = mImageView.getWidth();
         int targetH = mImageView.getHeight();
@@ -582,9 +631,10 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
+//            BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+
+//            int photoW = bmOptions.outWidth;
+//            int photoH = bmOptions.outHeight;
 
         Log.e("targetW", Integer.toString(targetW));
         Log.e("targetH", Integer.toString(targetH));
@@ -593,10 +643,11 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         bmOptions.inJustDecodeBounds = false;
 
         bmOptions.inPurgeable = true;
-
+//            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cat);
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         mImageView.setImageBitmap(bitmap);
     }
+
 
     private void sellItem(final long id, int quantity, String email, String name) {
         ContentUris.withAppendedId(CONTENT_URI, id);
@@ -613,7 +664,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             Toast toast;
             Toast.makeText(this, getString(R.string.sold) + " " + mName, Toast.LENGTH_SHORT).show();
 
-            finish();
         } else {
 
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -650,8 +700,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
     private void addItemToStock(long id, int quantity) {
         ContentUris.withAppendedId(CONTENT_URI, id);
         mQuantity = quantity;
-        final int[] mAddToStock = new int[1];
-
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
@@ -670,19 +718,19 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 String mInput = input.getText().toString().trim();
                 int finalValue = Integer.parseInt(mInput);
 
-                mAddToStock[0] = finalValue;
-                int mAddedQuantity = mQuantity + mAddToStock[0];
-                if (mAddedQuantity > 999) {
+                mQuantity = mQuantity + finalValue;
+                if (mQuantity > 999) {
                     Toast.makeText(getApplicationContext(), finalValue + " " + getString(R.string.tobig), Toast.LENGTH_SHORT).show();
                     return;
-                }
+                } else {
                 ContentValues values = new ContentValues();
-                values.put(COLUMN_ITEM_QUANTITY, mAddedQuantity);
+                    values.put(COLUMN_ITEM_QUANTITY, mQuantity);
                 getContentResolver().update(mCurrentItemUri, values, null, null);
 
 
-                mQuantityText.setText(Integer.toString(mAddedQuantity));
-                Toast.makeText(getApplicationContext(), finalValue + " " + getString(R.string.added), Toast.LENGTH_SHORT).show();
+                    mQuantityText.setText(String.valueOf(mQuantity));
+                    Toast.makeText(getApplicationContext(), finalValue + " " + getString(R.string.added), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

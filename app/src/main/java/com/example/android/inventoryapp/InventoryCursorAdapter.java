@@ -55,22 +55,30 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
         String itemQuantity = cursor.getString(quantityColumnIndex);
         String itemPicture = cursor.getString(pictureColumnIndex);
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(itemPicture, options);
-        int photoW = options.outWidth;
-        int photoH = options.outHeight;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
 
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW / 88, photoH / 88);
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(itemPicture, options);
+            int photoW = options.outWidth;
+            int photoH = options.outHeight;
 
-        // Decode the image file into a Bitmap sized to fill the View
-        options.inJustDecodeBounds = false;
-        options.inSampleSize = scaleFactor;
-        options.inPurgeable = true;
+            // Determine how much to scale down the image
+            int scaleFactor = Math.min(photoW / 88, photoH / 88);
 
-        Bitmap bitmap = BitmapFactory.decodeFile(itemPicture, options);
-        viewHolder.pictureImageView.setImageBitmap(bitmap);
+            // Decode the image file into a Bitmap sized to fill the View
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = scaleFactor;
+            options.inPurgeable = true;
+
+            Bitmap bitmap = BitmapFactory.decodeFile(itemPicture, options);
+            viewHolder.pictureImageView.setImageBitmap(bitmap);
+        } catch (NullPointerException e) {
+
+
+        }
+
+
 
         // Update the TextViews with the attributes for the current item
         viewHolder.nameTextView.setText(itemName);
