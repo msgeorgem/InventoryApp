@@ -117,5 +117,4 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
             pictureImageView = (ImageView) view.findViewById(R.id.thumbnail);
         }
     }
-
 }
