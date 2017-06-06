@@ -604,7 +604,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
 
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
-
         }
     }
 
@@ -650,6 +649,10 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
 //            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cat);
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         mImageView.setImageBitmap(bitmap);
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
+        getContentResolver().update(mCurrentItemUri, values, null, null);
     }
 
 
