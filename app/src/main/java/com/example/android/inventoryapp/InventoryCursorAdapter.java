@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -92,13 +93,12 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
             }
         });
 
-        viewHolder.sellItemTextView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.sellButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 activity.onSellClick(id, mQuantity, itemName);
             }
         });
-
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -107,6 +107,7 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
         public TextView priceTextView;
         public TextView sellItemTextView;
         public ImageView pictureImageView;
+        public Button sellButton;
 
 
         public ViewHolder(View view) {
@@ -115,6 +116,7 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
             priceTextView = (TextView) view.findViewById(R.id.price);
             sellItemTextView = (TextView) view.findViewById(R.id.sell_item);
             pictureImageView = (ImageView) view.findViewById(R.id.thumbnail);
+            sellButton = (Button) view.findViewById(R.id.sell_instant);
         }
     }
 }

@@ -59,7 +59,7 @@
     <string name="edit_stock">Number of Items</string>
 
     <!-- Label for measurement information in the editor [CHAR LIMIT=30] -->
-    <string name="quantity">Sell Item</string>
+    <string name="quantity">Sell</string>
 
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_item_name">Enter name of the item</string>

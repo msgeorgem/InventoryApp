@@ -102,13 +102,13 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
+            <Button
+                android:id="@+id/sell_instant"
                 android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|end"
                 android:fontFamily="sans-serif-medium"
-                android:gravity="top|end"
+                android:gravity="center_horizontal"
                 android:text="@string/quantity"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="#2B3D4D" />
@@ -131,7 +131,6 @@
                     android:gravity="right"
                     android:textAppearance="?android:textAppearanceMediumInverse"
                     android:textColor="#AEB6BD" />
-
 
                 <TextView
 
