@@ -137,6 +137,7 @@
     <string name="email_wrong">Wrong format of email</string>
     <string name="price_required">Price required</string>
     <string name="quantity_required">Quantity required</string>
+    <string name="picture_required">Picture required</string>
 
     <string name="dummy_pictureUri">android.resource://com.example.android.InventoryApp/drawable/cat</string>
 </resources>

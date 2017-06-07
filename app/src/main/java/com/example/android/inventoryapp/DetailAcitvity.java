@@ -280,7 +280,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             }
             values.put(COLUMN_ITEM_EMAIL, emailString);
 
-            if (TextUtils.isEmpty(priceString)) {
+            if (TextUtils.isEmpty(priceString) || TextUtils.equals("0", priceString) || TextUtils.equals("0.0", priceString)) {
                 Toast.makeText(this, getString(R.string.price_required), Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -294,6 +294,10 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
             // Create a ContentValues object where column names are the keys,
             // and item attributes from the editor are the values.
 
+            if (TextUtils.isEmpty(mCurrentPhotoPath)) {
+                Toast.makeText(this, getString(R.string.picture_required), Toast.LENGTH_SHORT).show();
+                return;
+            }
             values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
 
             // This is a NEW item, so insert a new item into the provider,
@@ -324,7 +328,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, R.string.warning_invalid_input, Toast.LENGTH_SHORT).show();
                 // Since no fields were modified, we can return early without creating a new item.
                 // No need to create ContentValues and no need to do any ContentProvider operations.
-
                 return;
             }
             if (TextUtils.isEmpty(nameString)) {
@@ -355,10 +358,8 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 return;
             }
             values.put(COLUMN_ITEM_PRICE, priceString);
-
             // Create a ContentValues object where column names are the keys,
             // and item attributes from the editor are the values.
-
             values.put(COLUMN_ITEM_QUANTITY, quantityString);
             values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
             // Otherwise this is an EXISTING item, so update the itme with content URI: mCurrentItemUri
@@ -373,7 +374,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, getString(R.string.editor_update_item_failed), Toast.LENGTH_SHORT).show();
             } else {
                 // Otherwise, the update was successful and we can display a toast.
-
                 Toast.makeText(this, getString(R.string.editor_update_item_success), Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -634,10 +634,6 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-//            BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-
-//            int photoW = bmOptions.outWidth;
-//            int photoH = bmOptions.outHeight;
 
         Log.e("targetW", Integer.toString(targetW));
         Log.e("targetH", Integer.toString(targetH));
@@ -649,12 +645,7 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
 //            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cat);
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         mImageView.setImageBitmap(bitmap);
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_ITEM_PICTURE, mCurrentPhotoPath);
-        getContentResolver().update(mCurrentItemUri, values, null, null);
     }
-
 
     public void sellItem(final long id, int quantity, String email, String name) {
         ContentUris.withAppendedId(CONTENT_URI, id);
@@ -730,9 +721,9 @@ public class DetailAcitvity extends AppCompatActivity implements LoaderManager.L
                     Toast.makeText(getApplicationContext(), finalValue + " " + getString(R.string.tobig), Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                ContentValues values = new ContentValues();
+                    ContentValues values = new ContentValues();
                     values.put(COLUMN_ITEM_QUANTITY, mQuantity);
-                getContentResolver().update(mCurrentItemUri, values, null, null);
+                    getContentResolver().update(mCurrentItemUri, values, null, null);
 
 
                     mQuantityText.setText(String.valueOf(mQuantity));
