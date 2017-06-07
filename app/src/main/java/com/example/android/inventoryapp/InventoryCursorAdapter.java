@@ -59,28 +59,24 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
 
         mQuantity = itemQuantity;
 
-        try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
+        BitmapFactory.Options options = new BitmapFactory.Options();
 
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(itemPicture, options);
-            int photoW = options.outWidth;
-            int photoH = options.outHeight;
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(itemPicture, options);
+        int photoW = options.outWidth;
+        int photoH = options.outHeight;
 
-            // Determine how much to scale down the image
-            int scaleFactor = Math.min(photoW / 88, photoH / 88);
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / 88, photoH / 88);
 
-            // Decode the image file into a Bitmap sized to fill the View
-            options.inJustDecodeBounds = false;
-            options.inSampleSize = scaleFactor;
-            options.inPurgeable = true;
+        // Decode the image file into a Bitmap sized to fill the View
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = scaleFactor;
+        options.inPurgeable = true;
 
-            Bitmap bitmap = BitmapFactory.decodeFile(itemPicture, options);
-            viewHolder.pictureImageView.setImageBitmap(bitmap);
-        } catch (NullPointerException e) {
-
-        }
-
+        Bitmap bitmap = BitmapFactory.decodeFile(itemPicture, options);
+        viewHolder.pictureImageView.setImageBitmap(bitmap);
+        
         // Update the TextViews with the attributes for the current item
         viewHolder.nameTextView.setText(itemName);
         viewHolder.priceTextView.setText(itemPrice);
