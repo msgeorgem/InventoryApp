@@ -58,7 +58,8 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
 
 
         mQuantity = itemQuantity;
-
+//        Context context = viewHolder.itemView.getContext();
+//        Picasso.with(context).load(uri).into(viewHolder.pictureImageView);
         BitmapFactory.Options options = new BitmapFactory.Options();
 
         options.inJustDecodeBounds = true;
@@ -81,6 +82,7 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
         viewHolder.nameTextView.setText(itemName);
         viewHolder.priceTextView.setText(itemPrice);
         viewHolder.sellItemTextView.setText(Integer.toString(itemQuantity));
+        viewHolder.itemView.setTag(id);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

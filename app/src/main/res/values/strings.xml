@@ -126,6 +126,7 @@
     <string name="discard_deleting">I do not want to delete all data</string>
     <string name="keep_deleting">I am sure to delete whole data</string>
     <string name="delete_all_items">items moved to recycle bin</string>
+    <string name="delete_one_item">one item moved to recycle bin</string>
     <string name="delete_allitems_dialog_msg">Are you sure to delete all items?</string>
     <string name="final_delete_all_items">items deleted. Database is empty</string>
     <string name="final_delete_allitems_dialog_msg">Are you sure to final delete all items?</string>

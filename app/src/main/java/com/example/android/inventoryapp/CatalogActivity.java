@@ -20,6 +20,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -30,6 +31,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +51,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     View emptyView;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +81,37 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         //kick off the loader
         getSupportLoaderManager().initLoader(ITEM_LOADER, null, this);
 
+        // COMPLETED (3) Create a new ItemTouchHelper with a SimpleCallback that handles both LEFT and RIGHT swipe directions
+        // Create an item touch helper to handle swiping items off the list
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            // COMPLETED (4) Override onMove and simply return false inside
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                //do nothing, we only care about swiping
+                return false;
+            }
+
+            // COMPLETED (5) Override onSwiped
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                // COMPLETED (8) Inside, get the viewHolder's itemView's tag and store in a long variable id
+                //get the id of the item being swiped
+                long id = (long) viewHolder.itemView.getTag();
+                // COMPLETED (9) call removeGuest and pass through that id
+                //remove from DB
+                deleteOneItem(id);
+                // COMPLETED (10) call swapCursor on mAdapter passing in getAllGuests() as the argument
+                //update the list
+                mCursorAdapter.swapCursor(null);
+            }
+
+            //COMPLETED (11) attach the ItemTouchHelper to the waitlistRecyclerView
+        }).attachToRecyclerView(mRecyclerView);
+
+
     }
+
 
     public void onItemClick(long id) {
         Intent intent = new Intent(CatalogActivity.this, DetailAcitvity.class);
@@ -121,6 +154,12 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         int rowsDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, null, null);
         Toast.makeText(this, rowsDeleted + " " + getString(R.string.delete_all_items), Toast.LENGTH_SHORT).show();
+    }
+
+    private void deleteOneItem(long id) {
+
+        int rowDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, InventoryContract.ItemEntry._ID + "=" + id, null);
+        Toast.makeText(this, rowDeleted + " " + getString(R.string.delete_one_item), Toast.LENGTH_SHORT).show();
     }
 
     private void showDeleteConfirmationDialogAllItems() {
