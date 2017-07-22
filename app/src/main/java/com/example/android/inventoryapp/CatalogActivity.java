@@ -29,6 +29,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -38,6 +39,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.InventoryContract;
+import com.example.android.inventoryapp.data.InventoryDbHelper;
 
 import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry._ID;
 
@@ -49,9 +51,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     private static final int ITEM_LOADER = 0;
     InventoryCursorAdapter mCursorAdapter;
     View emptyView;
+    SQLiteDatabase mDb;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,41 +79,71 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         mCursorAdapter = new InventoryCursorAdapter(this, null);
         mRecyclerView.setAdapter(mCursorAdapter);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //kick off the loader
         getSupportLoaderManager().initLoader(ITEM_LOADER, null, this);
+        InventoryDbHelper dbHelper = new InventoryDbHelper(this);
+        mDb = dbHelper.getReadableDatabase();
 
-        // COMPLETED (3) Create a new ItemTouchHelper with a SimpleCallback that handles both LEFT and RIGHT swipe directions
+        // Create a new ItemTouchHelper with a SimpleCallback that handles both LEFT and RIGHT swipe directions
         // Create an item touch helper to handle swiping items off the list
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
-            // COMPLETED (4) Override onMove and simply return false inside
+            // Override onMove and simply return false inside
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 //do nothing, we only care about swiping
                 return false;
             }
 
-            // COMPLETED (5) Override onSwiped
+            // Override onSwiped
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                // COMPLETED (8) Inside, get the viewHolder's itemView's tag and store in a long variable id
-                //get the id of the item being swiped
-                long id = (long) viewHolder.itemView.getTag();
-                // COMPLETED (9) call removeGuest and pass through that id
-                //remove from DB
-                deleteOneItem(id);
-                // COMPLETED (10) call swapCursor on mAdapter passing in getAllGuests() as the argument
-                //update the list
-                mCursorAdapter.swapCursor(null);
-            }
 
-            //COMPLETED (11) attach the ItemTouchHelper to the waitlistRecyclerView
+                showDeleteConfirmationDialogOneItem(viewHolder);
+
+
+            }
+            //attach the ItemTouchHelper to the waitlistRecyclerView
         }).attachToRecyclerView(mRecyclerView);
 
 
     }
 
+    private void showDeleteConfirmationDialogOneItem(final RecyclerView.ViewHolder viewHolder) {
+        //Inside, get the viewHolder's itemView's tag and store in a long variable id
+        //get the iD of the item being swiped
+        final long iD = (long) viewHolder.itemView.getTag();
+
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_oneitem_dialog_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete the item.
+                //remove from DB
+                deleteOneItem(iD);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                //call swapCursor on mAdapter passing in null as the argument
+                //update the list
+                mCursorAdapter.swapCursor(query());
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
     public void onItemClick(long id) {
         Intent intent = new Intent(CatalogActivity.this, DetailAcitvity.class);
@@ -151,16 +183,27 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     }
 
     private void deleteAllItems() {
-
         int rowsDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, null, null);
         Toast.makeText(this, rowsDeleted + " " + getString(R.string.delete_all_items), Toast.LENGTH_SHORT).show();
     }
 
     private void deleteOneItem(long id) {
-
         int rowDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, InventoryContract.ItemEntry._ID + "=" + id, null);
         Toast.makeText(this, rowDeleted + " " + getString(R.string.delete_one_item), Toast.LENGTH_SHORT).show();
     }
+
+    private Cursor query() {
+        return mDb.query(
+                InventoryContract.ItemEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
 
     private void showDeleteConfirmationDialogAllItems() {
         // Create an AlertDialog.Builder and set the message, and click listeners

@@ -128,6 +128,7 @@
     <string name="delete_all_items">items moved to recycle bin</string>
     <string name="delete_one_item">one item moved to recycle bin</string>
     <string name="delete_allitems_dialog_msg">Are you sure to delete all items?</string>
+    <string name="delete_oneitem_dialog_msg">Are you sure to delete this item?</string>
     <string name="final_delete_all_items">items deleted. Database is empty</string>
     <string name="final_delete_allitems_dialog_msg">Are you sure to final delete all items?</string>
     <string name="warning_invalid_input">Blank fields are not allowed</string>
