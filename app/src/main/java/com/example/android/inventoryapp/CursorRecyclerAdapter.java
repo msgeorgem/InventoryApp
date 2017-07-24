@@ -63,9 +63,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
         if (!cur.moveToPosition(position)) {
             throw new IllegalStateException("couldn't move cursor to position " + position);
         }
-
         onBindViewHolder(holder, cur);
-
     }
 
     public void changeCursor(Cursor cursor) {
@@ -116,5 +114,4 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
             //There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
         }
     }
-
 }

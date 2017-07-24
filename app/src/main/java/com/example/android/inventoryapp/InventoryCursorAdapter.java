@@ -91,6 +91,15 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
             }
         });
 
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                activity.onLongItemClick();
+                return false;
+            }
+        });
+
+
         viewHolder.sellButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

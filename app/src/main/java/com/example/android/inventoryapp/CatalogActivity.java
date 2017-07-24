@@ -39,7 +39,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.inventoryapp.data.InventoryContract;
-import com.example.android.inventoryapp.data.InventoryDbHelper;
 
 import static com.example.android.inventoryapp.data.InventoryContract.ItemEntry._ID;
 
@@ -84,12 +83,12 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
         //kick off the loader
         getSupportLoaderManager().initLoader(ITEM_LOADER, null, this);
-        InventoryDbHelper dbHelper = new InventoryDbHelper(this);
-        mDb = dbHelper.getReadableDatabase();
+//        InventoryDbHelper dbHelper = new InventoryDbHelper(this);
+//        mDb = dbHelper.getReadableDatabase();
 
-        // Create a new ItemTouchHelper with a SimpleCallback that handles both LEFT and RIGHT swipe directions
+        // Create a new ItemTouchHelper with a SimpleCallback that handles both LEFT  swipe directions
         // Create an item touch helper to handle swiping items off the list
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
             // Override onMove and simply return false inside
             @Override
@@ -97,19 +96,137 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 //do nothing, we only care about swiping
                 return false;
             }
-
             // Override onSwiped
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-
                 showDeleteConfirmationDialogOneItem(viewHolder);
-
-
             }
             //attach the ItemTouchHelper to the waitlistRecyclerView
         }).attachToRecyclerView(mRecyclerView);
 
+    }
 
+    public void onItemClick(long id) {
+        Intent intent = new Intent(CatalogActivity.this, DetailAcitvity.class);
+
+        Uri currentProductUri = ContentUris.withAppendedId(InventoryContract.ItemEntry.CONTENT_URI, id);
+        intent.setData(currentProductUri);
+
+        startActivity(intent);
+    }
+
+    public void onLongItemClick() {
+        showConfirmationDialog();
+    }
+
+    public void onSellClick(long id, int quantity, String mName) {
+        Uri currentProductUri = ContentUris.withAppendedId(InventoryContract.ItemEntry.CONTENT_URI, id);
+
+        if (quantity > 0) {
+            quantity--;
+            ContentValues values = new ContentValues();
+            values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, quantity);
+            getContentResolver().update(currentProductUri, values, null, null);
+            Toast.makeText(this, getString(R.string.sold) + " " + mName, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.empty) + " " + mName, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void insertItem() {
+        // Create a ContentValues object, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, "Kitten");
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, "Confused Kitten");
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL, "john.supplier@jjj.com");
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE, 100.23);
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, 1);
+        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, getString(R.string.dummy_pictureUri));
+        // Insert the new row, returning the primary key value of the new row
+        getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
+    }
+
+    private void deleteAllItems() {
+        int rowsDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, null, null);
+        Toast.makeText(this, rowsDeleted + " " + getString(R.string.delete_all_items), Toast.LENGTH_SHORT).show();
+    }
+
+    private void deleteOneItem(long id) {
+        int rowDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, InventoryContract.ItemEntry._ID + "=" + id, null);
+        Toast.makeText(this, rowDeleted + " " + getString(R.string.delete_one_item), Toast.LENGTH_SHORT).show();
+    }
+
+    //  working method but need to getReadable Database using db Helper(few lines earlier)
+//  private Cursor query() {
+//        return mDb.query(
+//                InventoryContract.ItemEntry.TABLE_NAME,
+//                null,
+//                null,
+//                null,
+//                null,
+//                null,
+//                null
+//        );
+//    }
+    private Cursor querY() {
+        return getContentResolver().query(InventoryContract.ItemEntry.CONTENT_URI, null, null, null, null);
+
+    }
+
+
+    private void showDeleteConfirmationDialogAllItems() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_allitems_dialog_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete the item.
+                deleteAllItems();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the item.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void showConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.what_to_do_dialog_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete the item.
+//                deleteAllItems();
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the item.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void showDeleteConfirmationDialogOneItem(final RecyclerView.ViewHolder viewHolder) {
@@ -136,93 +253,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 }
                 //call swapCursor on mAdapter passing in null as the argument
                 //update the list
-                mCursorAdapter.swapCursor(query());
-            }
-        });
-
-        // Create and show the AlertDialog
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
-    public void onItemClick(long id) {
-        Intent intent = new Intent(CatalogActivity.this, DetailAcitvity.class);
-
-        Uri currentProductUri = ContentUris.withAppendedId(InventoryContract.ItemEntry.CONTENT_URI, id);
-        intent.setData(currentProductUri);
-
-        startActivity(intent);
-    }
-
-    public void onSellClick(long id, int quantity, String mName) {
-        Uri currentProductUri = ContentUris.withAppendedId(InventoryContract.ItemEntry.CONTENT_URI, id);
-
-        if (quantity > 0) {
-            quantity--;
-            ContentValues values = new ContentValues();
-            values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, quantity);
-            getContentResolver().update(currentProductUri, values, null, null);
-            Toast.makeText(this, getString(R.string.sold) + " " + mName, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, getString(R.string.empty) + " " + mName, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void insertItem() {
-
-        // Create a ContentValues object, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_NAME, "Kitten");
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION, "Confused Kitten");
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL, "john.supplier@jjj.com");
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PRICE, 100.23);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY, 1);
-        values.put(InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE, getString(R.string.dummy_pictureUri));
-        // Insert the new row, returning the primary key value of the new row
-        getContentResolver().insert(InventoryContract.ItemEntry.CONTENT_URI, values);
-    }
-
-    private void deleteAllItems() {
-        int rowsDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, null, null);
-        Toast.makeText(this, rowsDeleted + " " + getString(R.string.delete_all_items), Toast.LENGTH_SHORT).show();
-    }
-
-    private void deleteOneItem(long id) {
-        int rowDeleted = getContentResolver().delete(InventoryContract.ItemEntry.CONTENT_URI, InventoryContract.ItemEntry._ID + "=" + id, null);
-        Toast.makeText(this, rowDeleted + " " + getString(R.string.delete_one_item), Toast.LENGTH_SHORT).show();
-    }
-
-    private Cursor query() {
-        return mDb.query(
-                InventoryContract.ItemEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-    }
-
-
-    private void showDeleteConfirmationDialogAllItems() {
-        // Create an AlertDialog.Builder and set the message, and click listeners
-        // for the positive and negative buttons on the dialog.
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.delete_allitems_dialog_msg);
-        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Delete" button, so delete the item.
-                deleteAllItems();
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the item.
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+                mCursorAdapter.swapCursor(querY());
             }
         });
 
@@ -264,7 +295,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 InventoryContract.ItemEntry.COLUMN_ITEM_PRICE,
                 InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY,
                 InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE,
-
         };
 
         // Perform a query using CursorLoader
@@ -291,6 +321,5 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     public void onLoaderReset(Loader<Cursor> loader) {
         // Callback called when the data needs to be deleted
         mCursorAdapter.swapCursor(null);
-
     }
 }
