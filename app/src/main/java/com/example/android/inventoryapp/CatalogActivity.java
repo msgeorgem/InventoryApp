@@ -51,6 +51,17 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     InventoryCursorAdapter mCursorAdapter;
     View emptyView;
     SQLiteDatabase mDb;
+    String[] projection = {
+            _ID,
+            InventoryContract.ItemEntry.COLUMN_ITEM_NAME,
+            InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION,
+            InventoryContract.ItemEntry.COLUMN_ITEM_PRICE,
+            InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY,
+            InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE,
+    };
+    //   Just a rough idea how to sort in query
+    String sortOrder = InventoryContract.ItemEntry.COLUMN_ITEM_NAME + " ASC";
+    String selection = InventoryContract.ItemEntry.getGreaterThanZero();
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -169,7 +180,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 //        );
 //    }
     private Cursor querY() {
-        return getContentResolver().query(InventoryContract.ItemEntry.CONTENT_URI, null, null, null, null);
+        return getContentResolver().query(InventoryContract.ItemEntry.CONTENT_URI, null, selection, null, sortOrder);
     }
 
 
@@ -287,16 +298,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projection = {
-                _ID,
-                InventoryContract.ItemEntry.COLUMN_ITEM_NAME,
-                InventoryContract.ItemEntry.COLUMN_ITEM_DESCRIPTION,
-                InventoryContract.ItemEntry.COLUMN_ITEM_PRICE,
-                InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY,
-                InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE,
-        };
-        String sortOrder = InventoryContract.ItemEntry.COLUMN_ITEM_NAME + " ASC";
-        String selection = InventoryContract.ItemEntry.getGreaterThanZero();
 
         // Perform a query using CursorLoader
         return new CursorLoader(this,    // Parent activity context

@@ -69,8 +69,8 @@ public class InventoryContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ITEMS;
 
         public static String getGreaterThanZero() {
-            long minmumquantity = 0;
-            return InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY + " > " + minmumquantity;
+            long minmumQuantity = 0;
+            return InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY + " > " + minmumQuantity;
         }
     }
 
