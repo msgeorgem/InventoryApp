@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.example.android.inventoryapp.utils.InventoryDateUtils;
+
 
 /**
  * Created by Marcin on 2017-03-30.
@@ -54,6 +56,7 @@ public class InventoryContract {
         public static final String COLUMN_ITEM_PRICE = "price";
         public static final String COLUMN_ITEM_QUANTITY = "quantity";
         public static final String COLUMN_ITEM_PICTURE = "image";
+        public static final String COLUMN_ITEM_DATE = "date";
 
 
         /**
@@ -71,6 +74,11 @@ public class InventoryContract {
         public static String getGreaterThanZero() {
             long minmumQuantity = 0;
             return InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY + " > " + minmumQuantity;
+        }
+
+        public static String getSqlSelectForTodayOnwards() {
+            long normalizedUtcNow = InventoryDateUtils.normalizeDate(System.currentTimeMillis());
+            return ItemEntry.COLUMN_ITEM_DATE + " >= " + normalizedUtcNow;
         }
     }
 

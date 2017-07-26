@@ -35,7 +35,7 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
     /**
      * Database version. If you change the database schema, you must increment the database version.
      */
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     /**
      * Constructs a new instance of {@link InventoryDbHelper}.
@@ -59,7 +59,8 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
                 + InventoryContract.ItemEntry.COLUMN_ITEM_EMAIL + " TEXT NOT NULL, "
                 + InventoryContract.ItemEntry.COLUMN_ITEM_PRICE + " INTEGER NOT NULL DEFAULT 0,"
                 + InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY + " INTEGER NOT NULL DEFAULT 0,"
-                + InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE + " BLOB);";
+                + InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE + " BLOB,"
+                + ItemEntry.COLUMN_ITEM_DATE + " INTEGER NOT NULL); ";
 
         Log.v(LOG_TAG,SQL_CREATE_ITEMS_TABLE);
         // Execute the SQL statement
