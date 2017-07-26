@@ -10,8 +10,7 @@ import android.provider.BaseColumns;
  */
 
 
-
-public final class InventoryContract {
+public class InventoryContract {
 
     /**
      *
@@ -44,7 +43,7 @@ public final class InventoryContract {
      * Each entry in the table represents a single item.
      */
 
-    public static abstract class ItemEntry implements BaseColumns {
+    public static final class ItemEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_ITEMS);
         public static final String TABLE_NAME = "items";
@@ -68,6 +67,11 @@ public final class InventoryContract {
          */
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ITEMS;
+
+        public static String getGreaterThanZero() {
+            long minmumquantity = 0;
+            return InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY + " > " + minmumquantity;
+        }
     }
 
 }

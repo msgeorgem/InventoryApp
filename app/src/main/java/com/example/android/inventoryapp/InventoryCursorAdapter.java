@@ -99,7 +99,6 @@ public class InventoryCursorAdapter extends CursorRecyclerAdapter<InventoryCurso
             }
         });
 
-
         viewHolder.sellButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

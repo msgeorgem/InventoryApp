@@ -170,7 +170,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 //    }
     private Cursor querY() {
         return getContentResolver().query(InventoryContract.ItemEntry.CONTENT_URI, null, null, null, null);
-
     }
 
 
@@ -296,14 +295,16 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 InventoryContract.ItemEntry.COLUMN_ITEM_QUANTITY,
                 InventoryContract.ItemEntry.COLUMN_ITEM_PICTURE,
         };
+        String sortOrder = InventoryContract.ItemEntry.COLUMN_ITEM_NAME + " ASC";
+        String selection = InventoryContract.ItemEntry.getGreaterThanZero();
 
         // Perform a query using CursorLoader
         return new CursorLoader(this,    // Parent activity context
                 InventoryContract.ItemEntry.CONTENT_URI, // Provider content URI to query
                 projection,            // The columns to include in the resulting Cursor
-                null,                  // The values for the WHERE clause
+                selection,                  // The values for the WHERE clause
                 null,                  // No selection arguments
-                null);                 // Default sort order
+                sortOrder);                 // Default sort order
     }
 
     @Override
